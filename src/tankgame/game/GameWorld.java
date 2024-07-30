@@ -37,6 +37,11 @@ public class GameWorld extends JPanel implements Runnable {
     @Override
     public void run() {
         this.resetGame();
+
+        Sound bg = ResourceManager.getSound("bg");
+        bg.loopContinusly();
+        bg.play();
+
         try {
             while (true) {
                 this.tick++;

@@ -100,7 +100,7 @@ public class Tank extends GameObject {
         return (int)screenY;
     }
 
-    void update(GameWorld gw) {
+    void update() {
         if (this.UpPressed) {
             this.moveForwards();
         }
