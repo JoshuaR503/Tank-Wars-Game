@@ -34,7 +34,7 @@ public class Tank extends GameObject {
 
     private boolean shootPressed;
 
-    private long coolDown = 1500;
+    private long coolDown = 500;
     private long timeSinceLastShot = 0;
 
     List<Bullet> ammo = new ArrayList<Bullet>();
@@ -119,6 +119,7 @@ public class Tank extends GameObject {
 
         long currentTime = System.currentTimeMillis();
 
+        // massive work to be had here in order to use regular bullets and arrays instead of resource pool
         if (this.shootPressed && currentTime > this.timeSinceLastShot + this.coolDown) {
             this.timeSinceLastShot = currentTime;
 
@@ -126,6 +127,8 @@ public class Tank extends GameObject {
             p.initObject(x, y, angle);
 
              this.ammo.add((Bullet) p);
+
+             ResourceManager.getSound("shooting").play();
         }
 
         for (int i = 0; i < this.ammo.size(); i++) {

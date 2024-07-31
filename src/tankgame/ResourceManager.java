@@ -37,32 +37,28 @@ public class ResourceManager {
 
     private static void loadSounds() {
         try {
-            // update sounds pls
-            ResourceManager.sounds.put("bullethit", loadSound("bullet.wav"));
-            ResourceManager.sounds.put("bulletshot", loadSound("bullet.wav"));
-            ResourceManager.sounds.put("explosion", loadSound("bullet.wav"));
-            ResourceManager.sounds.put("pickup", loadSound("bullet.wav"));
-            ResourceManager.sounds.put("shooting", loadSound("bullet.wav"));
-            ResourceManager.sounds.put("bg", loadSound("bullet.wav"));
-
+            ResourceManager.sounds.put("bg", loadSound("sounds/music_fixed.wav"));
+            ResourceManager.sounds.put("bullet_collide", loadSound("sounds/bullet.wav"));
+            ResourceManager.sounds.put("pickup", loadSound("sounds/pickup.wav"));
+            ResourceManager.sounds.put("shooting", loadSound("sounds/shotfiring.wav"));
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-           System.out.println("Could not load sounds");
-            throw  new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
     private static void loadAnimtations() {
         (new HashMap<String, Integer>(){{
             put("bullethit", 24);
-            put("bulletshot", 24);
-            put("explostion_lg", 6);
-            put("explostion_sm", 6);
-            put("pickup", 32);
+            put("bulletshoot", 24);
+//            put("explosion_lg", 6);
+//            put("explosion_sm", 6);
+            put("powerpick", 32);
+            put("puffsmoke", 32);
+            put("rockethit", 32);
         }}).forEach((animationName, frameCount) -> {
 
             String baseName = "animations/%s/%s_%04d.png";
 
-            // this way there are no shifs
             List<BufferedImage> frames = new ArrayList<>(frameCount);
 
            try {
@@ -77,18 +73,20 @@ public class ResourceManager {
         });
     }
 
-    private static void initSprites() throws IOException {
-        ResourceManager.sprites.put("t1", loadSprite("tank1.png"));
-        ResourceManager.sprites.put("t2", loadSprite("tank2.png"));
-        ResourceManager.sprites.put("menuBackground", loadSprite("title.png"));
-        ResourceManager.sprites.put("uwall", loadSprite("wall1.png"));
-        ResourceManager.sprites.put("floor", loadSprite("Background.bmp"));
-        ResourceManager.sprites.put("bullet", loadSprite("Shell.gif"));
+    private static void loadSprites() throws IOException {
+        ResourceManager.sprites.put("t1", loadSprite("tank/tank1.png"));
+        ResourceManager.sprites.put("t2", loadSprite("tank/tank2.png"));
+        ResourceManager.sprites.put("menuBackground", loadSprite("menu/title.png"));
+        ResourceManager.sprites.put("uwall", loadSprite("wall/wall1.png"));
+        ResourceManager.sprites.put("floor", loadSprite("floor/bg.bmp"));
+        ResourceManager.sprites.put("bullet", loadSprite("bullet/Shell.gif"));
     }
 
     public static void loadAssets() {
         try {
-            initSprites();
+            loadSprites();
+            loadSounds();
+            loadAnimtations();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -100,10 +98,6 @@ public class ResourceManager {
             throw new IllegalArgumentException("Resource %s is not in map".formatted(key));
         }
         return ResourceManager.sprites.get(key);
-    }
-
-    public static void main(String[] args) {
-        ResourceManager.loadAssets();
     }
 
     public static Sound getSound(String key) {

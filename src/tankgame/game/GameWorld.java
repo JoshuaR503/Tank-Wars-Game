@@ -14,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -29,6 +28,7 @@ public class GameWorld extends JPanel implements Runnable {
     private long tick = 0;
 
     ArrayList<GameObject> gObjs = new ArrayList<>(1000);
+    ArrayList<Animation> anims = new ArrayList<>();
 
     public GameWorld(Launcher lf) {
         this.lf = lf;
@@ -39,16 +39,22 @@ public class GameWorld extends JPanel implements Runnable {
         this.resetGame();
 
         Sound bg = ResourceManager.getSound("bg");
-        bg.loopContinusly();
-        bg.play();
+//        bg.loopContinusly();
+//        bg.play();
 
         try {
+
+            this.anims.add(new Animation(100, 100, ResourceManager.getAnimation("puffsmoke")));
             while (true) {
                 this.tick++;
                 this.t1.update(); // update tank
                 this.t2.update();
                 this.checkCollisions();
                 this.repaint();   // redraw game
+
+                for (int i = 0; i < this.anims.size(); i++) {
+                    this.anims.get(i).update();
+                }
                 /*
                  * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
                  * loop run at a fixed rate per/sec. 
@@ -88,7 +94,7 @@ public class GameWorld extends JPanel implements Runnable {
 
         InputStreamReader isr = new InputStreamReader(
                 Objects.requireNonNull(
-                        ResourceManager.class.getResourceAsStream("/map.csv")
+                        ResourceManager.class.getResourceAsStream("/maps/map.csv")
                 )
         );
 
@@ -163,6 +169,10 @@ public class GameWorld extends JPanel implements Runnable {
         this.renderFlor(buffer);
         for (int i = 0; i < this.gObjs.size(); i++) {
             this.gObjs.get(i).draw(buffer);
+        }
+
+        for (int i = 0; i < this.anims.size(); i++) {
+            this.anims.get(i).render(buffer);
         }
     }
 
