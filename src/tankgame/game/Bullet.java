@@ -10,15 +10,23 @@ import java.awt.image.BufferedImage;
  *
  * @author anthony-pc
  */
-public class Bullet extends GameObject implements Poolable {
-
-
+public class Bullet extends GameObject implements Poolable, Updatable {
     private float vx;
     private float vy;
     private float angle;
 
     private float R = 5;
     private float ROTATIONSPEED = 3.0f;
+
+    public int getTankID() {
+        return tankID;
+    }
+
+    public void setTankID(int tankID) {
+        this.tankID = tankID;
+    }
+
+    private int tankID  = -1;
 
     public Bullet(BufferedImage img) {
         super(0, 0, img);
@@ -29,12 +37,14 @@ public class Bullet extends GameObject implements Poolable {
 
     public Bullet(float x, float y, float angle, BufferedImage img) {
         super(x, y, img);
+
         this.vx = 0;
         this.vy = 0;
         this.angle = angle;
     }
 
-    void update() {
+    @Override
+    public void update(GameWorld gameWorld) {
         vx = Math.round(R * Math.cos(Math.toRadians(angle)));
         vy = Math.round(R * Math.sin(Math.toRadians(angle)));
         x += vx;
@@ -73,10 +83,6 @@ public class Bullet extends GameObject implements Poolable {
         g2d.drawImage(this.img, rotation, null);
     }
 
-    @Override
-    public String toString() {
-        return "x=" + x + ", y=" + y + ", angle=" + angle;
-    }
 
     @Override
     public void initObject(float x, float y) {

@@ -9,13 +9,16 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
  * @author anthony-pc
  */
-public class Tank extends GameObject {
+public class Tank extends GameObject implements Updatable, Colliable {
 
+
+    private int tankId;
     private float screenX;
     private float screenY;
 
@@ -37,10 +40,10 @@ public class Tank extends GameObject {
     private long coolDown = 500;
     private long timeSinceLastShot = 0;
 
-    List<Bullet> ammo = new ArrayList<Bullet>();
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
         super(x, y, img);
+        this.tankId = new Random().nextInt(300);
         this.screenX = x;
         this.screenY = y;
         this.vx = vx;
@@ -100,7 +103,8 @@ public class Tank extends GameObject {
         return (int)screenY;
     }
 
-    void update() {
+    @Override
+    public void update(GameWorld gameWorld) {
         if (this.UpPressed) {
             this.moveForwards();
         }
@@ -119,21 +123,24 @@ public class Tank extends GameObject {
 
         long currentTime = System.currentTimeMillis();
 
-        // massive work to be had here in order to use regular bullets and arrays instead of resource pool
         if (this.shootPressed && currentTime > this.timeSinceLastShot + this.coolDown) {
             this.timeSinceLastShot = currentTime;
 
             var p = ResourcePools.getPooledInstance("bullet");
             p.initObject(x, y, angle);
 
-             this.ammo.add((Bullet) p);
+            Bullet b = (Bullet) p;
+
+            b.setTankID(this.tankId);
+
+             gameWorld.addGameObject((b));
 
              ResourceManager.getSound("shooting").play();
         }
 
-        for (int i = 0; i < this.ammo.size(); i++) {
-            this.ammo.get(i).update();
-        }
+//        for (int i = 0; i < this.ammo.size(); i++) {
+//            this.ammo.get(i).update();
+//        }
 
         centerScreen();
         this.hitbox.setLocation((int) x, (int) y);
@@ -202,14 +209,23 @@ public class Tank extends GameObject {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
 
-        for (int i = 0; i < this.ammo.size(); i++) {
-            this.ammo.get(i).draw(g);
-        }
+//        for (int i = 0; i < this.ammo.size(); i++) {
+//            this.ammo.get(i).draw(g);
+//        }
+    }
+
+//    @Override
+//    public String toString() {
+//        return "x=" + x + ", y=" + y + ", angle=" + angle;
+//    }
+
+
+    public void handleCollision(GameObject by) {
+
     }
 
     @Override
-    public String toString() {
-        return "x=" + x + ", y=" + y + ", angle=" + angle;
+    public void onCollision(GameObject by) {
+        System.out.println("Tank collision with: " + by.toString());
     }
-
 }

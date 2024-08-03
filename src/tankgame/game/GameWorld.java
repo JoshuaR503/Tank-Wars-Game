@@ -38,7 +38,7 @@ public class GameWorld extends JPanel implements Runnable {
     public void run() {
         this.resetGame();
 
-        Sound bg = ResourceManager.getSound("bg");
+//        Sound bg = ResourceManager.getSound("bg");
 //        bg.loopContinusly();
 //        bg.play();
 
@@ -47,18 +47,21 @@ public class GameWorld extends JPanel implements Runnable {
             this.anims.add(new Animation(100, 100, ResourceManager.getAnimation("puffsmoke")));
             while (true) {
                 this.tick++;
-                this.t1.update(); // update tank
-                this.t2.update();
-                this.checkCollisions();
-                this.repaint();   // redraw game
 
-                for (int i = 0; i < this.anims.size(); i++) {
-                    this.anims.get(i).update();
+                for (int i = this.gObjs.size() -1; i >= 0; i--) {
+                    if (this.gObjs.get(i) instanceof Updatable u) {
+                        u.update(this);
+                    } else {
+                        break;
+                    }
                 }
-                /*
-                 * Sleep for 1000/144 ms (~6.9ms). This is done to have our 
-                 * loop run at a fixed rate per/sec. 
-                */
+
+                this.checkCollisions();
+                this.gObjs.removeIf(GameObject::hasCollided);
+
+                this.repaint();
+
+
 
                 Thread.sleep(1000/144);
             }
@@ -68,9 +71,24 @@ public class GameWorld extends JPanel implements Runnable {
     }
 
     private void checkCollisions() {
-//        for (int i = 0; i < ; i++) {
-//
-//        }
+        for (int i = 0; i < this.gObjs.size(); i++) {
+            GameObject obj = this.gObjs.get(i);
+
+            if (!(obj instanceof  Updatable)) {continue;}
+
+            for (int j = 0; j < this.gObjs.size(); j++) {
+
+                if (i == j) continue;
+
+                GameObject obj2 = this.gObjs.get(j);
+
+                if (!(obj2 instanceof Colliable)) {continue;}
+
+                if (obj.getHitbox().intersects(obj2.getHitbox())) {
+                    ((Colliable) obj2).onCollision(obj);
+                }
+            }
+        }
     }
 
     /**
@@ -115,8 +133,6 @@ public class GameWorld extends JPanel implements Runnable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
 
         t1 = new Tank(300, 300, 0, 0, (short) 0, ResourceManager.getSprite("t1"));
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
@@ -171,9 +187,9 @@ public class GameWorld extends JPanel implements Runnable {
             this.gObjs.get(i).draw(buffer);
         }
 
-        for (int i = 0; i < this.anims.size(); i++) {
-            this.anims.get(i).render(buffer);
-        }
+//        for (int i = 0; i < this.anims.size(); i++) {
+//            this.anims.get(i).render(buffer);
+//        }
     }
 
     @Override
@@ -185,5 +201,9 @@ public class GameWorld extends JPanel implements Runnable {
         this.displaySplitScreen(g2);
         this.displayMiniMap(g2);
 
+    }
+
+    public void addGameObject(GameObject gameObject) {
+        this.gObjs.add(gameObject);
     }
 }

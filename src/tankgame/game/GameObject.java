@@ -10,6 +10,7 @@ public abstract class GameObject {
     protected float x, y;
     protected BufferedImage img;
     protected Rectangle hitbox;
+    protected boolean hasCollided = false;
 
     public GameObject(float x, float y, BufferedImage img) {
         this.x = x;
@@ -43,5 +44,9 @@ public abstract class GameObject {
 
     public Rectangle getHitbox() {
         return hitbox.getBounds();
+    }
+
+    public boolean hasCollided() {
+        return this.hasCollided;
     }
 }
