@@ -26,12 +26,13 @@ public abstract class GameObject {
      * @param y pos
      * @return created sub-class of GameObject
      */
-    public static GameObject newInstance(String type, float x, float y) {
+    public static GameObject newInstance(String type, float x, float y, AnimationManager animationManager) {
+
 
         System.out.println(type);
         return switch (type) {
             case "9" -> new Wall(x, y, ResourceManager.getSprite("uwall"));
-            case "3" -> new BreakableWall(x, y, ResourceManager.getSprite("bwall"));
+            case "3" -> new BreakableWall(x, y, ResourceManager.getSprite("bwall"), animationManager);
             case "4" -> new Speed(x, y, ResourceManager.getSprite("tank"));
             case "5" -> new Shield(x, y, ResourceManager.getSprite("tank"));
             case "6" -> new Health(x, y, ResourceManager.getSprite("tank"));

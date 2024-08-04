@@ -21,10 +21,6 @@ public class Animation {
         this.isRunning = true;
     }
 
-    public Animation(List<BufferedImage> frames) {
-        this.frames = frames;
-    }
-
     // todo: animation has to face the same direction of the tank lmao
     public void update() {
         long currentTime = System.currentTimeMillis();
@@ -38,5 +34,9 @@ public class Animation {
         if (isRunning) {
             g.drawImage(this.frames.get(currentFrame), (int)x, (int)y, null);
         }
+    }
+
+    public boolean isComplete() {
+        return this.currentFrame == frames.size() - 1;
     }
 }

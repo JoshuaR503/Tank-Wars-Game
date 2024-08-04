@@ -28,7 +28,7 @@ public class GameWorld extends JPanel implements Runnable {
     private long tick = 0;
 
     ArrayList<GameObject> gObjs = new ArrayList<>(1000);
-    ArrayList<Animation> anims = new ArrayList<>();
+    private AnimationManager animationManager = new AnimationManager();
 
     public GameWorld(Launcher lf) {
         this.lf = lf;
@@ -44,7 +44,6 @@ public class GameWorld extends JPanel implements Runnable {
 
         try {
 
-            this.anims.add(new Animation(100, 100, ResourceManager.getAnimation("puffsmoke")));
             while (true) {
                 this.tick++;
 
@@ -58,6 +57,7 @@ public class GameWorld extends JPanel implements Runnable {
 
                 this.checkCollisions();
                 this.gObjs.removeIf(GameObject::hasCollided);
+                animationManager.updateAnimations();
                 this.repaint();
 
                 Thread.sleep(1000/144);
@@ -143,7 +143,7 @@ public class GameWorld extends JPanel implements Runnable {
 
                 for (int col = 0; col < gameItems.length; col++) {
                     if (gameItems[col].equals("0") || gameItems[col].isEmpty()) continue;
-                    this.gObjs.add(GameObject.newInstance(gameItems[col], col*32, row*32));
+                    this.gObjs.add(GameObject.newInstance(gameItems[col], col*32, row*32, animationManager));
                 }
 
                 row++;
@@ -205,22 +205,19 @@ public class GameWorld extends JPanel implements Runnable {
             this.gObjs.get(i).draw(buffer);
         }
 
-//        for (int i = 0; i < this.anims.size(); i++) {
-//            this.anims.get(i).render(buffer);
-//        }
+        animationManager.draw(buffer);
     }
 
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-
         this.renderFrame();
         this.displaySplitScreen(g2);
         this.displayMiniMap(g2);
-
     }
 
     public void addGameObject(GameObject gameObject) {
         this.gObjs.add(gameObject);
     }
+
 }
