@@ -74,7 +74,7 @@ public class GameWorld extends JPanel implements Runnable {
         for (int i = 0; i < this.gObjs.size(); i++) {
             GameObject obj = this.gObjs.get(i);
 
-            if (!(obj instanceof  Updatable)) {continue;}
+            if (!(obj instanceof Updatable)) {continue;}
 
             for (int j = 0; j < this.gObjs.size(); j++) {
 
@@ -85,7 +85,19 @@ public class GameWorld extends JPanel implements Runnable {
                 if (!(obj2 instanceof Colliable)) {continue;}
 
                 if (obj.getHitbox().intersects(obj2.getHitbox())) {
+
                     ((Colliable) obj2).onCollision(obj);
+
+                    System.out.println("\n\n--------------------------");
+                    System.out.println(obj);
+                    System.out.println(obj2);
+
+                    // Mark bullet for removal regardless of what it hit.
+                    if (obj instanceof Bullet) {
+                        System.out.println("Marked bullet for removal");
+                        obj.markCollision();
+                    }
+
                 }
             }
         }

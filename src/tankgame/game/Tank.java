@@ -127,20 +127,24 @@ public class Tank extends GameObject implements Updatable, Colliable {
             this.timeSinceLastShot = currentTime;
 
             var p = ResourcePools.getPooledInstance("bullet");
-            p.initObject(x, y, angle);
+
+            float offset = 20.0f; // Increased offset to ensure bullet is spawned outside the tank's hitbox
+            float bulletX = x + img.getWidth() / 2.0f + (float) Math.cos(Math.toRadians(angle)) * (img.getWidth() / 2.0f + offset);
+            float bulletY = y + img.getHeight() / 2.0f + (float) Math.sin(Math.toRadians(angle)) * (img.getHeight() / 2.0f + offset);
+
+
+            p.initObject(bulletX, bulletY, angle);
 
             Bullet b = (Bullet) p;
 
-            b.setTankID(this.tankId);
+            System.out.println("Bullet spawn position: (" + bulletX + ", " + bulletY + ")");
+            System.out.println("Tank hitbox position: (" + x + ", " + y + ")");
+            System.out.println("Bullet hitbox before init: " + b.getHitbox());
 
-             gameWorld.addGameObject((b));
+            gameWorld.addGameObject((b));
 
-             ResourceManager.getSound("shooting").play();
+            ResourceManager.getSound("shooting").play();
         }
-
-//        for (int i = 0; i < this.ammo.size(); i++) {
-//            this.ammo.get(i).update();
-//        }
 
         centerScreen();
         this.hitbox.setLocation((int) x, (int) y);
@@ -208,24 +212,15 @@ public class Tank extends GameObject implements Updatable, Colliable {
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
-
-//        for (int i = 0; i < this.ammo.size(); i++) {
-//            this.ammo.get(i).draw(g);
-//        }
-    }
-
-//    @Override
-//    public String toString() {
-//        return "x=" + x + ", y=" + y + ", angle=" + angle;
-//    }
-
-
-    public void handleCollision(GameObject by) {
-
     }
 
     @Override
     public void onCollision(GameObject by) {
-        System.out.println("Tank collision with: " + by.toString());
+
+        if (by instanceof Bullet) {
+
+            by.hasCollided = true;
+            System.out.println("This tank was hit by a bullet, decreasing life");
+        }
     }
 }

@@ -79,7 +79,7 @@ public class ResourceManager {
         ResourceManager.sprites.put("menuBackground", loadSprite("menu/title.png"));
         ResourceManager.sprites.put("uwall", loadSprite("wall/wall1.png"));
         ResourceManager.sprites.put("floor", loadSprite("floor/bg.bmp"));
-        ResourceManager.sprites.put("bullet", loadSprite("bullet/Shell.gif"));
+        ResourceManager.sprites.put("bullet", loadSprite("bullet/bullet.jpg"));
     }
 
     public static void loadAssets() {

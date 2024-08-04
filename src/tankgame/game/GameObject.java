@@ -49,4 +49,8 @@ public abstract class GameObject {
     public boolean hasCollided() {
         return this.hasCollided;
     }
+
+    public void markCollision() {
+        this.hasCollided = true;
+    }
 }

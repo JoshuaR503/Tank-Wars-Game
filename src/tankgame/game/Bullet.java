@@ -10,23 +10,13 @@ import java.awt.image.BufferedImage;
  *
  * @author anthony-pc
  */
-public class Bullet extends GameObject implements Poolable, Updatable {
+public class Bullet extends GameObject implements Poolable, Updatable, Colliable {
     private float vx;
     private float vy;
     private float angle;
 
     private float R = 5;
     private float ROTATIONSPEED = 3.0f;
-
-    public int getTankID() {
-        return tankID;
-    }
-
-    public void setTankID(int tankID) {
-        this.tankID = tankID;
-    }
-
-    private int tankID  = -1;
 
     public Bullet(BufferedImage img) {
         super(0, 0, img);
@@ -37,7 +27,6 @@ public class Bullet extends GameObject implements Poolable, Updatable {
 
     public Bullet(float x, float y, float angle, BufferedImage img) {
         super(x, y, img);
-
         this.vx = 0;
         this.vy = 0;
         this.angle = angle;
@@ -53,25 +42,14 @@ public class Bullet extends GameObject implements Poolable, Updatable {
         this.hitbox.setLocation((int) x, (int) y);
     }
 
-    private void rotateLeft() {
-        this.angle -= this.ROTATIONSPEED;
+    private boolean isOutOfBounds() {
+        // Assuming the gameWorld has methods to get its dimensions
+        return x < 0 || x > GameConstants.GAME_WORLD_WIDTH - 88 || y < 0 || y > GameConstants.GAME_WORLD_HEIGHT - 80;
     }
-
-    private void rotateRight() {
-        this.angle += this.ROTATIONSPEED;
-    }
-
 
     private void checkBorder() {
-        if (x < 30) x = 30;
-        if (y < 40) y = 40;
-
-        if (x >= GameConstants.GAME_WORLD_WIDTH - 88) {
-            x = GameConstants.GAME_WORLD_WIDTH - 88;
-        }
-
-        if (y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
-            y = GameConstants.GAME_WORLD_HEIGHT - 80;
+        if (x < 30 || y < 40 || x >= GameConstants.GAME_WORLD_WIDTH - 88 || y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
+           this.markCollision();
         }
     }
 
@@ -95,11 +73,19 @@ public class Bullet extends GameObject implements Poolable, Updatable {
         this.x = x;
         this.y = y;
         this.angle = angle;
+        this.hitbox.setLocation((int) x, (int) y);
+
     }
 
     @Override
     public void resetObject() {
         this.x = -5;
         this.y = -5;
+    }
+
+    @Override
+    public void onCollision(GameObject by) {
+        System.out.println("Bullet collided, market for removal");
+//        this.hasCollided = true;
     }
 }
