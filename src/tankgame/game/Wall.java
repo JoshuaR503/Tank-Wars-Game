@@ -8,7 +8,6 @@ public class Wall extends GameObject implements Colliable {
         super(x, y, img);
     }
 
-
     @Override
     public void onCollision(GameObject by) {
 

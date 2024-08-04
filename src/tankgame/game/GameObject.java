@@ -28,9 +28,11 @@ public abstract class GameObject {
      * @return created sub-class of GameObject
      */
     public static GameObject newInstance(String type, float x, float y) {
+
+        System.out.println(type);
         return switch (type) {
-            case "3", "9" -> new Wall(x, y, ResourceManager.getSprite("uwall"));
-            case "2" -> new BreakableWall(x, y, ResourceManager.getSprite("bwall"));
+            case "9" -> new Wall(x, y, ResourceManager.getSprite("uwall"));
+            case "3" -> new BreakableWall(x, y, ResourceManager.getSprite("bwall"));
             case "4" -> new Speed(x, y, ResourceManager.getSprite("tank"));
             case "5" -> new Shield(x, y, ResourceManager.getSprite("tank"));
             case "6" -> new Health(x, y, ResourceManager.getSprite("tank"));
@@ -53,4 +55,8 @@ public abstract class GameObject {
     public void markCollision() {
         this.hasCollided = true;
     }
+
+//    public boolean isPassable() {
+//        return this instanceof BreakableWall;
+//    }
 }

@@ -40,6 +40,8 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private long coolDown = 500;
     private long timeSinceLastShot = 0;
 
+    private float prevX;
+    private float prevY;
 
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
         super(x, y, img);
@@ -105,6 +107,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
     @Override
     public void update(GameWorld gameWorld) {
+
         if (this.UpPressed) {
             this.moveForwards();
         }
@@ -148,7 +151,6 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
         centerScreen();
         this.hitbox.setLocation((int) x, (int) y);
-
     }
 
     private void rotateLeft() {
@@ -214,6 +216,16 @@ public class Tank extends GameObject implements Updatable, Colliable {
         g2d.drawImage(this.img, rotation, null);
     }
 
+//    private boolean willCollide(float x, float y, GameWorld gameWorld) {
+//        Rectangle newHitbox = new Rectangle((int) x, (int) y, img.getWidth(), img.getHeight());
+//        for (GameObject obj : gameWorld.gObjs) {
+//            if (obj.isBreakableWall() && newHitbox.intersects(obj.getHitbox())) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
     @Override
     public void onCollision(GameObject by) {
 
@@ -221,6 +233,14 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
             by.hasCollided = true;
             System.out.println("This tank was hit by a bullet, decreasing life");
+        }
+
+        if (by instanceof BreakableWall) {
+
+            System.out.println("Collision with wall");
+//            this.x = prevX;
+//            this.y = prevY;
+//            this.hitbox.setLocation((int) x, (int) y);
         }
     }
 }

@@ -124,7 +124,7 @@ public class GameWorld extends JPanel implements Runnable {
 
         InputStreamReader isr = new InputStreamReader(
                 Objects.requireNonNull(
-                        ResourceManager.class.getResourceAsStream("/maps/map.csv")
+                        ResourceManager.class.getResourceAsStream("/maps/map2.csv")
                 )
         );
 
@@ -136,7 +136,9 @@ public class GameWorld extends JPanel implements Runnable {
                 String[] gameItems = line.split(",");
 
                 for (int col = 0; col < gameItems.length; col++) {
-                    if (gameItems[col].equals("0")) continue;
+                    if (gameItems[col].equals("0") || gameItems[col].equals("")) continue;
+
+                    System.out.println("NEXT ITEM: " + gameItems[col]);
                     this.gObjs.add(GameObject.newInstance(gameItems[col], col*32, row*32));
                 }
 
