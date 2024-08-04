@@ -70,6 +70,16 @@ public class GameWorld extends JPanel implements Runnable {
         }
     }
 
+    public boolean willCollideWithWall(float x, float y, float width, float height) {
+        Rectangle futureBounds = new Rectangle((int) x, (int) y, (int) width, (int) height);
+        for (GameObject obj : gObjs) {
+            if (obj instanceof BreakableWall && futureBounds.intersects(obj.getHitbox())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void checkCollisions() {
         for (int i = 0; i < this.gObjs.size(); i++) {
             GameObject obj = this.gObjs.get(i);

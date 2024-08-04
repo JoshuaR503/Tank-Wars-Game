@@ -109,11 +109,11 @@ public class Tank extends GameObject implements Updatable, Colliable {
     public void update(GameWorld gameWorld) {
 
         if (this.UpPressed) {
-            this.moveForwards();
+            move(gameWorld, R);
         }
 
         if (this.DownPressed) {
-            this.moveBackwards();
+            move(gameWorld, -R);
         }
 
         if (this.LeftPressed) {
@@ -123,7 +123,6 @@ public class Tank extends GameObject implements Updatable, Colliable {
         if (this.RightPressed) {
             this.rotateRight();
         }
-
         long currentTime = System.currentTimeMillis();
 
         if (this.shootPressed && currentTime > this.timeSinceLastShot + this.coolDown) {
@@ -153,6 +152,27 @@ public class Tank extends GameObject implements Updatable, Colliable {
         this.hitbox.setLocation((int) x, (int) y);
     }
 
+    private void move(GameWorld gameWorld, float direction) {
+
+        float vx = (float) (direction * Math.cos(Math.toRadians(angle)));
+        float vy = (float) (direction * Math.sin(Math.toRadians(angle)));
+        float newX = x + vx;
+        float newY = y + vy;
+
+        boolean canMoveHorizontally = !gameWorld.willCollideWithWall(newX, y, img.getWidth(), img.getHeight());
+        boolean canMoveVertically = !gameWorld.willCollideWithWall(x, newY, img.getWidth(), img.getHeight());
+
+        if (canMoveHorizontally) {
+            x = newX;
+        }
+
+        if (canMoveVertically) {
+            y = newY;
+        }
+
+        checkBorder();
+    }
+
     private void rotateLeft() {
         this.angle -= this.ROTATIONSPEED;
     }
@@ -161,20 +181,17 @@ public class Tank extends GameObject implements Updatable, Colliable {
         this.angle += this.ROTATIONSPEED;
     }
 
-    private void moveBackwards() {
-        vx =  Math.round(R * Math.cos(Math.toRadians(angle)));
-        vy =  Math.round(R * Math.sin(Math.toRadians(angle)));
-        x -= vx;
-        y -= vy;
-       checkBorder();
-    }
+    private void checkBorder() {
+        if (x < 30) x = 30;
+        if (y < 40) y = 40;
 
-    private void moveForwards() {
-        vx = Math.round(R * Math.cos(Math.toRadians(angle)));
-        vy = Math.round(R * Math.sin(Math.toRadians(angle)));
-        x += vx;
-        y += vy;
-        checkBorder();
+        if (x >= GameConstants.GAME_WORLD_WIDTH - 88) {
+            x = GameConstants.GAME_WORLD_WIDTH - 88;
+        }
+
+        if (y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
+            y = GameConstants.GAME_WORLD_HEIGHT - 80;
+        }
     }
 
     private void centerScreen () {
@@ -195,19 +212,6 @@ public class Tank extends GameObject implements Updatable, Colliable {
     }
 
 
-    private void checkBorder() {
-        if (x < 30) x = 30;
-        if (y < 40) y = 40;
-
-        if (x >= GameConstants.GAME_WORLD_WIDTH - 88) {
-            x = GameConstants.GAME_WORLD_WIDTH - 88;
-        }
-
-        if (y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
-            y = GameConstants.GAME_WORLD_HEIGHT - 80;
-        }
-    }
-
     @Override
     public void draw(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
@@ -216,15 +220,6 @@ public class Tank extends GameObject implements Updatable, Colliable {
         g2d.drawImage(this.img, rotation, null);
     }
 
-//    private boolean willCollide(float x, float y, GameWorld gameWorld) {
-//        Rectangle newHitbox = new Rectangle((int) x, (int) y, img.getWidth(), img.getHeight());
-//        for (GameObject obj : gameWorld.gObjs) {
-//            if (obj.isBreakableWall() && newHitbox.intersects(obj.getHitbox())) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 
     @Override
     public void onCollision(GameObject by) {
@@ -236,11 +231,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
         }
 
         if (by instanceof BreakableWall) {
-
-            System.out.println("Collision with wall");
-//            this.x = prevX;
-//            this.y = prevY;
-//            this.hitbox.setLocation((int) x, (int) y);
+            // I think players should lose points if they hit a wall.
         }
     }
 }

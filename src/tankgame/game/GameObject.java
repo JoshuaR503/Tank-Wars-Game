@@ -19,7 +19,6 @@ public abstract class GameObject {
         hitbox = new Rectangle((int) x, (int) y, img.getWidth(), img.getHeight());
     }
 
-
     /**
      * Create new game object based on a type
      * @param type type of the game object
@@ -55,8 +54,4 @@ public abstract class GameObject {
     public void markCollision() {
         this.hasCollided = true;
     }
-
-//    public boolean isPassable() {
-//        return this instanceof BreakableWall;
-//    }
 }
