@@ -33,7 +33,7 @@ public class Animation {
             lastUpdateTime = currentTime;
             currentFrame++;
             if (currentFrame >= frames.size()) {
-                isRunning = false; // Stop the animation after one complete cycle
+                isRunning = false;
             }
         }
     }

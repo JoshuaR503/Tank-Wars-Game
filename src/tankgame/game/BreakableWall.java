@@ -21,8 +21,6 @@ public class BreakableWall extends GameObject implements Colliable {
             // TODO: reduce by the bullet's amount of damage (i.e) if there is a power up.
             life--;
 
-            GameWorld.createAnimation(new Animation(x, y, ResourceManager.getAnimation("bullethit")));
-
             if (life <= 0) {
                 this.markCollision();
 

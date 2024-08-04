@@ -66,7 +66,7 @@ public class  TankControl implements KeyListener {
         }
 
         if (keyReleased == shoot) {
-            this.t1.unToogleShoot();
+            this.t1.unToggleShoot();
         }
     }
 }

@@ -1,22 +1,25 @@
 package tankgame.game;
 
 import tankgame.GameConstants;
+import tankgame.ResourceManager;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 /**
- *
- * @author anthony-pc
+ * Bullet class representing a projectile in the game.
+ * Implements Poolable, Updatable, and Colliable interfaces.
+ * Author: anthony-pc
  */
-public class Bullet extends GameObject implements Poolable, Updatable, Colliable {
+public class Bullet extends GameObject implements Poolable, Updatable {
+
     private float vx;
     private float vy;
     private float angle;
+    private final float R = 10;
 
-    private float R = 10;
-
+    // Constructor
     // DO NOT REMOVE
     public Bullet(BufferedImage img) {
         super(0, 0, img);
@@ -25,6 +28,15 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
         this.angle = 0;
     }
 
+    @Override
+    public void initObject(float x, float y, float angle) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+        this.hitbox.setLocation((int) x, (int) y);
+    }
+
+    // Behavior.
     @Override
     public void update() {
         vx = Math.round(R * Math.cos(Math.toRadians(angle)));
@@ -35,52 +47,21 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
         this.hitbox.setLocation((int) x, (int) y);
     }
 
-    private boolean isOutOfBounds() {
-        // Assuming the gameWorld has methods to get its dimensions
-        return x < 0 || x > GameConstants.GAME_WORLD_WIDTH - 88 || y < 0 || y > GameConstants.GAME_WORLD_HEIGHT - 80;
-    }
-
+    // Collision.
     private void checkBorder() {
         if (x < 30 || y < 40 || x >= GameConstants.GAME_WORLD_WIDTH - 88 || y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
             // Bullet goes out of bounds, mark itself to removal.
             System.out.println("Marked bullet out of bounds");
-           this.markCollision();
+            this.markCollision();
         }
     }
 
+    // Drawing.
     @Override
     public void draw(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
-    }
-
-
-    @Override
-    public void initObject(float x, float y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public void initObject(float x, float y, float angle) {
-        this.x = x;
-        this.y = y;
-        this.angle = angle;
-        this.hitbox.setLocation((int) x, (int) y);
-
-    }
-
-    @Override
-    public void resetObject() {
-        this.x = -5;
-        this.y = -5;
-    }
-
-    @Override
-    public void onCollision(GameObject by) {
-        System.out.println("Bullet collided, market for removal");
-//        this.hasCollided = true;
     }
 }

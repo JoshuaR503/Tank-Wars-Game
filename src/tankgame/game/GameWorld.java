@@ -13,13 +13,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
-/**
- * @author anthony-pc
- */
 public class GameWorld extends JPanel implements Runnable {
 
     private BufferedImage world;
@@ -29,34 +24,26 @@ public class GameWorld extends JPanel implements Runnable {
     private long tick = 0;
 
     private static final ArrayList<GameObject> gObjs = new ArrayList<>(1000);
+    private static final ArrayList<Animation> animations = new ArrayList<>(1000);
 
-    private static final List<Animation> animations = new ArrayList<>(1000);
-    public static void createAnimation(Animation ani) {
-        animations.add(ani);
-    }
+    private final Rectangle futureBounds = new Rectangle();
 
-
-//    private AnimationManager animationManager = new AnimationManager();
+    static double scaleFactor = .2;
 
     public GameWorld(Launcher lf) {
         this.lf = lf;
     }
 
+    // State related.
     @Override
     public void run() {
         this.resetGame();
-
-//        Sound bg = ResourceManager.getSound("bg");
-//        bg.loopContinusly();
-//        bg.play();
-
         try {
-
             while (true) {
                 this.tick++;
 
-                for (int i = this.gObjs.size() -1; i >= 0; i--) {
-                    if (this.gObjs.get(i) instanceof Updatable u) {
+                for (int i = gObjs.size() - 1; i >= 0; i--) {
+                    if (gObjs.get(i) instanceof Updatable u) {
                         u.update();
                     } else {
                         break;
@@ -68,80 +55,31 @@ public class GameWorld extends JPanel implements Runnable {
                 }
 
                 this.checkCollisions();
-                this.gObjs.removeIf(GameObject::hasCollided);
-//                animationManager.updateAnimations();
+
+                gObjs.removeIf(GameObject::hasCollided);
+
                 this.repaint();
 
-                Thread.sleep(1000/144);
+                Thread.sleep(1000 / 144);
             }
         } catch (InterruptedException ignored) {
             System.out.println(ignored);
         }
     }
 
-    private final Rectangle futureBounds = new Rectangle();
-
-    public boolean willCollideWithWall(float x, float y, float width, float height) {
-        futureBounds.setBounds((int) x, (int) y, (int) width, (int) height);
-
-        for (GameObject obj : gObjs) {
-            if (obj instanceof BreakableWall && futureBounds.intersects(obj.getHitbox())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void checkCollisions() {
-        for (int i = 0; i < this.gObjs.size(); i++) {
-            GameObject obj = this.gObjs.get(i);
-
-            if (!(obj instanceof Updatable)) {continue;}
-
-            for (int j = 0; j < this.gObjs.size(); j++) {
-
-                if (i == j) continue;
-
-                GameObject obj2 = this.gObjs.get(j);
-
-                if (!(obj2 instanceof Colliable)) {continue;}
-
-                if (obj.getHitbox().intersects(obj2.getHitbox())) {
-
-                    ((Colliable) obj2).onCollision(obj);
-
-                    // Universal bullet removal regardless of what it hit.
-                    if (obj instanceof Bullet) {
-                        System.out.println("Marked bullet for removal because it collided");
-                        obj.markCollision();
-                    }
-
-                }
-            }
-        }
-    }
-
-    /**
-     * Reset game to its initial state.
-     */
-    public void resetGame() {
+    private void resetGame() {
         this.tick = 0;
+
+        /// TODO: Make them spawn opposite sides at the middle.
         this.t1.setX(300);
         this.t1.setY(300);
     }
 
-    /**
-     * Load all resources for Tank Wars Game. Set all Game Objects to their
-     * initial state as well.
-     */
     public void InitializeGame() {
-
         GameObject.setGameWorld(this);
-
         this.world = new BufferedImage(GameConstants.GAME_WORLD_WIDTH,
                 GameConstants.GAME_WORLD_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
-
 
         InputStreamReader isr = new InputStreamReader(
                 Objects.requireNonNull(
@@ -158,7 +96,7 @@ public class GameWorld extends JPanel implements Runnable {
 
                 for (int col = 0; col < gameItems.length; col++) {
                     if (gameItems[col].equals("0") || gameItems[col].isEmpty()) continue;
-                    this.gObjs.add(GameObject.newInstance(gameItems[col], col*32, row*32));
+                    gObjs.add(GameObject.newInstance(gameItems[col], col * 32, row * 32));
                 }
 
                 row++;
@@ -175,24 +113,75 @@ public class GameWorld extends JPanel implements Runnable {
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
 
-        this.gObjs.add(t1);
-        this.gObjs.add(t2);
+        gObjs.add(t1);
+        gObjs.add(t2);
     }
 
+    // Animation related.
+    public static void createAnimation(Animation ani) {
+        animations.add(ani);
+    }
+
+    public static void addGameObject(GameObject gameObject) {
+        gObjs.add(gameObject);
+    }
+
+    // Collision related.
+    private void checkCollisions() {
+        for (int i = 0; i < gObjs.size(); i++) {
+            GameObject obj = gObjs.get(i);
+
+            if (!(obj instanceof Updatable)) {
+                continue;
+            }
+
+            for (int j = 0; j < gObjs.size(); j++) {
+                if (i == j) continue;
+
+                GameObject obj2 = gObjs.get(j);
+
+                if (!(obj2 instanceof Colliable)) {
+                    continue;
+                }
+
+                if (obj.getHitbox().intersects(obj2.getHitbox())) {
+                    ((Colliable) obj2).onCollision(obj);
+
+                    if (obj instanceof Bullet) {
+                        // Automatically mark bullet for deletion & make an animation.
+                        obj.markCollision();
+                        createAnimation(new Animation(obj2.x, obj2.y, ResourceManager.getAnimation("bullethit")));
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean willCollideWithWall(float x, float y, float width, float height) {
+        futureBounds.setBounds((int) x, (int) y, (int) width, (int) height);
+
+        for (GameObject obj : gObjs) {
+            if (obj instanceof BreakableWall && futureBounds.intersects(obj.getHitbox())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Rendering related.
     private void renderFlor(Graphics buffer) {
         BufferedImage floor = ResourceManager.getSprite("floor");
 
-        for (int i = 0; i < GameConstants.GAME_WORLD_WIDTH; i+=320) {
-            for (int j = 0; j < GameConstants.GAME_WORLD_HEIGHT; j+=240) {
+        for (int i = 0; i < GameConstants.GAME_WORLD_WIDTH; i += 320) {
+            for (int j = 0; j < GameConstants.GAME_WORLD_HEIGHT; j += 240) {
                 buffer.drawImage(floor, i, j, null);
             }
         }
     }
 
-    static double scaleFactor = .2;
     private void displayMiniMap(Graphics2D onScreenPanel) {
         BufferedImage mm = this.world.getSubimage(0, 0, GameConstants.GAME_WORLD_WIDTH, GameConstants.GAME_WORLD_HEIGHT);
-        double mmx = GameConstants.GAME_SCREEN_WIDTH/2. - (GameConstants.GAME_WORLD_WIDTH * scaleFactor) / 2;
+        double mmx = GameConstants.GAME_SCREEN_WIDTH / 2. - (GameConstants.GAME_WORLD_WIDTH * scaleFactor) / 2;
         double mmy = GameConstants.GAME_SCREEN_HEIGHT - (GameConstants.GAME_WORLD_HEIGHT * scaleFactor);
         AffineTransform scaler = AffineTransform.getTranslateInstance(mmx, mmy);
         scaler.scale(scaleFactor, scaleFactor);
@@ -202,34 +191,31 @@ public class GameWorld extends JPanel implements Runnable {
     private void displaySplitScreen(Graphics2D onScreenPanel) {
         BufferedImage lh = this.world.getSubimage(
                 this.t1.getScreenX(),
-                this.t1.getScreenY(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
+                this.t1.getScreenY(), GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
 
         BufferedImage rh = this.world.getSubimage(
                 this.t2.getScreenX(),
-                this.t2.getScreenY(), GameConstants.GAME_SCREEN_WIDTH/2, GameConstants.GAME_SCREEN_HEIGHT);
+                this.t2.getScreenY(), GameConstants.GAME_SCREEN_WIDTH / 2, GameConstants.GAME_SCREEN_HEIGHT);
 
         onScreenPanel.drawImage(lh, 0, 0, null);
-        onScreenPanel.drawImage(rh, GameConstants.GAME_SCREEN_WIDTH/2+2, 0, null);
+        onScreenPanel.drawImage(rh, GameConstants.GAME_SCREEN_WIDTH / 2 + 2, 0, null);
     }
 
     private void renderFrame() {
         Graphics2D buffer = world.createGraphics();
 
         this.renderFlor(buffer);
-        for (int i = 0; i < this.gObjs.size(); i++) {
-            this.gObjs.get(i).draw(buffer);
+
+        for (GameObject gObj : gObjs) {
+            gObj.draw(buffer);
         }
 
-        for (int i = animations.size() - 1; i >= 0; i--) {
-            if (animations.get(i).isComplete()) {
-                animations.remove(i);
-            } else {
-                animations.get(i).draw(buffer);
+        for (Animation ani : animations) {
+            ani.draw(buffer);
+            if (ani.isComplete()) {
+                animations.remove(ani);
             }
         }
-
-
-//        animationManager.draw(buffer);
     }
 
     @Override
@@ -239,9 +225,4 @@ public class GameWorld extends JPanel implements Runnable {
         this.displaySplitScreen(g2);
         this.displayMiniMap(g2);
     }
-
-    public static void addGameObject(GameObject gameObject) {
-        gObjs.add(gameObject);
-    }
-
 }
