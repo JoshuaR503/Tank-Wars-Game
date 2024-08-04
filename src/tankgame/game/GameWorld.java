@@ -3,6 +3,8 @@ package tankgame.game;
 import tankgame.GameConstants;
 import tankgame.Launcher;
 import tankgame.ResourceManager;
+import tankgame.game.powerup.IncreasedDamage;
+import tankgame.game.powerup.PowerUp;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +17,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Random;
 
 public class GameWorld extends JPanel implements Runnable {
 
@@ -26,6 +29,7 @@ public class GameWorld extends JPanel implements Runnable {
 
     private static final ArrayList<GameObject> gObjs = new ArrayList<>(1000);
     private static final ArrayList<Animation> animations = new ArrayList<>(1000);
+    private static final ArrayList<PowerUp> powerUps = new ArrayList<>(100);
 
     private final Rectangle futureBounds = new Rectangle();
 
@@ -58,6 +62,11 @@ public class GameWorld extends JPanel implements Runnable {
                 this.checkCollisions();
 
                 gObjs.removeIf(GameObject::hasCollided);
+
+                // Spawn power-ups every 500 ticks
+                if (this.tick % 500 == 0) {
+                    spawnPowerUp();
+                }
 
                 this.repaint();
 
@@ -118,13 +127,26 @@ public class GameWorld extends JPanel implements Runnable {
         gObjs.add(t2);
     }
 
+    public static void addGameObject(GameObject gameObject) {
+        gObjs.add(gameObject);
+    }
+
     // Animation related.
     public static void createAnimation(Animation ani) {
         animations.add(ani);
     }
 
-    public static void addGameObject(GameObject gameObject) {
-        gObjs.add(gameObject);
+    // Power up related.
+    private void spawnPowerUp() {
+        Random rand = new Random();
+        int x = rand.nextInt(GameConstants.GAME_WORLD_WIDTH);
+        int y = rand.nextInt(GameConstants.GAME_WORLD_HEIGHT);
+
+        BufferedImage powerUpImage = ResourceManager.getSprite("shield");
+        PowerUp powerUp = new IncreasedDamage(x, y, powerUpImage);
+        System.out.println(powerUp);
+
+        addGameObject(powerUp);
     }
 
     // Collision related.

@@ -3,6 +3,7 @@ package tankgame.game;
 import tankgame.GameConstants;
 import tankgame.ResourceManager;
 import tankgame.ResourcePools;
+import tankgame.game.powerup.PowerUp;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -21,7 +22,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private float vx;
     private float vy;
     private float angle;
-    private float R = 5;
+    private float R = 2;
     private float ROTATIONSPEED = 2.0f;
 
     private boolean UpPressed;
@@ -33,7 +34,9 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private long coolDown = 500;
     private long timeSinceLastShot = 0;
 
+    // Dynamic attributes
     private int lives = 5;
+    private int bulletDamage = 1;
 
     // Constructor
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
@@ -58,6 +61,10 @@ public class Tank extends GameObject implements Updatable, Colliable {
         return lives;
     }
 
+    public int getBulletDamage() {
+        return bulletDamage;
+    }
+
     // Setters
     void setX(float x) {
         this.x = x;
@@ -67,8 +74,12 @@ public class Tank extends GameObject implements Updatable, Colliable {
         this.y = y;
     }
 
-    void setLives(int lives) {
+    protected void setLives(int lives) {
         this.lives = lives;
+    }
+
+    public void setBulletDamage(int bulletDamage) {
+        this.bulletDamage = bulletDamage;
     }
 
     // Toggle methods for controls
@@ -193,8 +204,12 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
             if (this.lives <= 0) {
                 System.out.println("Tank destroyed!");
-                // Handle tank destruction (e.g., remove from game)
+                // TODO: Handle tank destruction
             }
+        }
+
+        if (by instanceof PowerUp) {
+            ((PowerUp) by).setAffectedTank(this);
         }
     }
 

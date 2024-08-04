@@ -1,0 +1,22 @@
+package tankgame.game.powerup;
+import tankgame.game.Tank;
+
+import java.awt.image.BufferedImage;
+
+public class IncreasedDamage extends PowerUp {
+    public IncreasedDamage(float x, float y, BufferedImage img) {
+        super(x, y, img);
+    }
+
+    @Override
+    public void apply(Tank tank) {
+        System.out.println("Power up expired, damage to default.");
+        tank.setBulletDamage(tank.getBulletDamage() * 2);
+    }
+
+    @Override
+    public void remove(Tank tank) {
+        System.out.println("Power up expired, damage to default.");
+        tank.setBulletDamage(tank.getBulletDamage() / 2);
+    }
+}
