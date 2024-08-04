@@ -104,7 +104,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
     }
 
     @Override
-    public void update(GameWorld gameWorld) {
+    public void update() {
 
         if (this.UpPressed) {
             move(gameWorld, R);
@@ -141,7 +141,8 @@ public class Tank extends GameObject implements Updatable, Colliable {
             System.out.println("Tank hitbox position: (" + x + ", " + y + ")");
             System.out.println("Bullet hitbox before init: " + b.getHitbox());
 
-            gameWorld.addGameObject((b));
+
+            GameWorld.addGameObject((b));
 
             ResourceManager.getSound("shooting").play();
         }

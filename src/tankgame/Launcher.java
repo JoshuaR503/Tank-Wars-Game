@@ -1,9 +1,6 @@
 package tankgame;
 
-import tankgame.game.Bullet;
-import tankgame.game.GameWorld;
-import tankgame.game.Poolable;
-import tankgame.game.ResourcePool;
+import tankgame.game.*;
 import tankgame.menus.EndGamePanel;
 import tankgame.menus.StartMenuPanel;
 
@@ -100,8 +97,6 @@ public class Launcher {
     }
 
     public static void main(String[] args) {
-
-
         SwingUtilities.invokeLater(() -> {
             ResourceManager.loadAssets();
             ResourcePools.addPool("bullet", new ResourcePool<>("bullet", Bullet.class, 500).fillPool(500));

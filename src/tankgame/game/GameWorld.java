@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -27,8 +28,15 @@ public class GameWorld extends JPanel implements Runnable {
     private final Launcher lf;
     private long tick = 0;
 
-    ArrayList<GameObject> gObjs = new ArrayList<>(1000);
-    private AnimationManager animationManager = new AnimationManager();
+    private static final ArrayList<GameObject> gObjs = new ArrayList<>(1000);
+
+    private static final List<Animation> animations = new ArrayList<>(1000);
+    public static void createAnimation(Animation ani) {
+        animations.add(ani);
+    }
+
+
+//    private AnimationManager animationManager = new AnimationManager();
 
     public GameWorld(Launcher lf) {
         this.lf = lf;
@@ -49,15 +57,19 @@ public class GameWorld extends JPanel implements Runnable {
 
                 for (int i = this.gObjs.size() -1; i >= 0; i--) {
                     if (this.gObjs.get(i) instanceof Updatable u) {
-                        u.update(this);
+                        u.update();
                     } else {
                         break;
                     }
                 }
 
+                for (Animation ani : animations) {
+                    ani.update();
+                }
+
                 this.checkCollisions();
                 this.gObjs.removeIf(GameObject::hasCollided);
-                animationManager.updateAnimations();
+//                animationManager.updateAnimations();
                 this.repaint();
 
                 Thread.sleep(1000/144);
@@ -123,6 +135,9 @@ public class GameWorld extends JPanel implements Runnable {
      * initial state as well.
      */
     public void InitializeGame() {
+
+        GameObject.setGameWorld(this);
+
         this.world = new BufferedImage(GameConstants.GAME_WORLD_WIDTH,
                 GameConstants.GAME_WORLD_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
@@ -143,7 +158,7 @@ public class GameWorld extends JPanel implements Runnable {
 
                 for (int col = 0; col < gameItems.length; col++) {
                     if (gameItems[col].equals("0") || gameItems[col].isEmpty()) continue;
-                    this.gObjs.add(GameObject.newInstance(gameItems[col], col*32, row*32, animationManager));
+                    this.gObjs.add(GameObject.newInstance(gameItems[col], col*32, row*32));
                 }
 
                 row++;
@@ -205,7 +220,16 @@ public class GameWorld extends JPanel implements Runnable {
             this.gObjs.get(i).draw(buffer);
         }
 
-        animationManager.draw(buffer);
+        for (int i = animations.size() - 1; i >= 0; i--) {
+            if (animations.get(i).isComplete()) {
+                animations.remove(i);
+            } else {
+                animations.get(i).draw(buffer);
+            }
+        }
+
+
+//        animationManager.draw(buffer);
     }
 
     @Override
@@ -216,8 +240,8 @@ public class GameWorld extends JPanel implements Runnable {
         this.displayMiniMap(g2);
     }
 
-    public void addGameObject(GameObject gameObject) {
-        this.gObjs.add(gameObject);
+    public static void addGameObject(GameObject gameObject) {
+        gObjs.add(gameObject);
     }
 
 }
