@@ -3,7 +3,6 @@ package tankgame.game;
 import tankgame.ResourceManager;
 
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 public class BreakableWall extends GameObject implements Colliable {
 
@@ -23,7 +22,6 @@ public class BreakableWall extends GameObject implements Colliable {
 
             if (life <= 0) {
                 this.markCollision();
-
                 GameWorld.createAnimation(new Animation(x, y, ResourceManager.getAnimation("puffsmoke")));
             }
 

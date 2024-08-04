@@ -50,8 +50,6 @@ public class ResourceManager {
         (new HashMap<String, Integer>(){{
             put("bullethit", 24);
             put("bulletshoot", 24);
-//            put("explosion_lg", 6);
-//            put("explosion_sm", 6);
             put("powerpick", 32);
             put("puffsmoke", 32);
             put("rockethit", 32);

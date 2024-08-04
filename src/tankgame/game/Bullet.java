@@ -12,12 +12,12 @@ import java.awt.image.BufferedImage;
  * Implements Poolable, Updatable, and Colliable interfaces.
  * Author: anthony-pc
  */
-public class Bullet extends GameObject implements Poolable, Updatable {
+public class Bullet extends GameObject implements Poolable, Updatable, Colliable {
 
     private float vx;
     private float vy;
     private float angle;
-    private final float R = 10;
+    private final float R = 2;
 
     // Constructor
     // DO NOT REMOVE
@@ -53,6 +53,14 @@ public class Bullet extends GameObject implements Poolable, Updatable {
             // Bullet goes out of bounds, mark itself to removal.
             System.out.println("Marked bullet out of bounds");
             this.markCollision();
+        }
+    }
+
+    @Override
+    public void onCollision(GameObject by) {
+        if (by instanceof Bullet) {
+            by.markCollision();
+            GameWorld.createAnimation(new Animation(by.x, by.y, ResourceManager.getAnimation("rockethit")));
         }
     }
 

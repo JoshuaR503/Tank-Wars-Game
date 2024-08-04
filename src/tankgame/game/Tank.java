@@ -205,6 +205,27 @@ public class Tank extends GameObject implements Updatable, Colliable {
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
+        drawLives(g2d);
+    }
+
+    private void drawLives(Graphics2D g2d) {
+        int barWidth = 50;
+        int barHeight = 5;
+        int barX = (int) this.x + (this.img.getWidth() / 2) - (barWidth / 2);
+        int barY = (int) this.y - 10;
+
+        // Background of the health bar
+        g2d.setColor(Color.RED);
+        g2d.fillRect(barX, barY, barWidth, barHeight);
+
+        // Foreground of the health bar representing the current health
+        g2d.setColor(Color.GREEN);
+        int currentBarWidth = (int) ((double) this.lives / 5 * barWidth);
+        g2d.fillRect(barX, barY, currentBarWidth, barHeight);
+
+        // Border of the health bar
+        g2d.setColor(Color.darkGray);
+        g2d.drawRect(barX, barY, barWidth, barHeight);
     }
 
     // Bounds and screen rendering methods

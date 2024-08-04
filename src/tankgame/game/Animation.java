@@ -2,6 +2,7 @@ package tankgame.game;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 import java.util.List;
 
 public class Animation {
@@ -46,15 +47,5 @@ public class Animation {
 
     public boolean isComplete() {
         return !isRunning;
-    }
-
-    public void stop() {
-        isRunning = false;
-    }
-
-    public void start() {
-        isRunning = true;
-        currentFrame = 0;
-        lastUpdateTime = System.currentTimeMillis();
     }
 }

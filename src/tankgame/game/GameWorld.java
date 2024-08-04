@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class GameWorld extends JPanel implements Runnable {
@@ -105,11 +106,11 @@ public class GameWorld extends JPanel implements Runnable {
             throw new RuntimeException(e);
         }
 
-        t1 = new Tank(300, 300, 0, 0, (short) 0, ResourceManager.getSprite("t1"));
+        t1 = new Tank(100, 300, 0, 0, (short) 0, ResourceManager.getSprite("t1"));
         TankControl tc1 = new TankControl(t1, KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_SPACE);
         this.lf.getJf().addKeyListener(tc1);
 
-        t2 = new Tank(400, 400, 0, 0, (short) 180, ResourceManager.getSprite("t2"));
+        t2 = new Tank(1100, 300, 0, 0, (short) 180, ResourceManager.getSprite("t2"));
         TankControl tc2 = new TankControl(t2, KeyEvent.VK_UP, KeyEvent.VK_LEFT, KeyEvent.VK_DOWN, KeyEvent.VK_RIGHT, KeyEvent.VK_ENTER);
         this.lf.getJf().addKeyListener(tc2);
 
@@ -147,8 +148,8 @@ public class GameWorld extends JPanel implements Runnable {
                 if (obj.getHitbox().intersects(obj2.getHitbox())) {
                     ((Colliable) obj2).onCollision(obj);
 
+                    // Automatically mark bullet for deletion & make an animation.
                     if (obj instanceof Bullet) {
-                        // Automatically mark bullet for deletion & make an animation.
                         obj.markCollision();
                         createAnimation(new Animation(obj2.x, obj2.y, ResourceManager.getAnimation("bullethit")));
                     }
@@ -210,10 +211,12 @@ public class GameWorld extends JPanel implements Runnable {
             gObj.draw(buffer);
         }
 
-        for (Animation ani : animations) {
-            ani.draw(buffer);
-            if (ani.isComplete()) {
-                animations.remove(ani);
+        Iterator<Animation> iterator = animations.iterator();
+        while (iterator.hasNext()) {
+            Animation animation = iterator.next();
+            animation.draw(buffer);
+            if (animation.isComplete()) {
+                iterator.remove();
             }
         }
     }
