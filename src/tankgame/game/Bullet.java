@@ -49,6 +49,8 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
 
     private void checkBorder() {
         if (x < 30 || y < 40 || x >= GameConstants.GAME_WORLD_WIDTH - 88 || y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
+            // Bullet goes out of bounds, mark itself to removal.
+            System.out.println("Marked bullet out of bounds");
            this.markCollision();
         }
     }

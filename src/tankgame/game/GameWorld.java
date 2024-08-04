@@ -4,7 +4,6 @@ import tankgame.GameConstants;
 import tankgame.Launcher;
 import tankgame.ResourceManager;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -58,10 +58,7 @@ public class GameWorld extends JPanel implements Runnable {
 
                 this.checkCollisions();
                 this.gObjs.removeIf(GameObject::hasCollided);
-
                 this.repaint();
-
-
 
                 Thread.sleep(1000/144);
             }
@@ -70,8 +67,11 @@ public class GameWorld extends JPanel implements Runnable {
         }
     }
 
+    private final Rectangle futureBounds = new Rectangle();
+
     public boolean willCollideWithWall(float x, float y, float width, float height) {
-        Rectangle futureBounds = new Rectangle((int) x, (int) y, (int) width, (int) height);
+        futureBounds.setBounds((int) x, (int) y, (int) width, (int) height);
+
         for (GameObject obj : gObjs) {
             if (obj instanceof BreakableWall && futureBounds.intersects(obj.getHitbox())) {
                 return true;
@@ -98,13 +98,9 @@ public class GameWorld extends JPanel implements Runnable {
 
                     ((Colliable) obj2).onCollision(obj);
 
-                    System.out.println("\n\n--------------------------");
-                    System.out.println(obj);
-                    System.out.println(obj2);
-
-                    // Mark bullet for removal regardless of what it hit.
+                    // Universal bullet removal regardless of what it hit.
                     if (obj instanceof Bullet) {
-                        System.out.println("Marked bullet for removal");
+                        System.out.println("Marked bullet for removal because it collided");
                         obj.markCollision();
                     }
 
@@ -146,9 +142,7 @@ public class GameWorld extends JPanel implements Runnable {
                 String[] gameItems = line.split(",");
 
                 for (int col = 0; col < gameItems.length; col++) {
-                    if (gameItems[col].equals("0") || gameItems[col].equals("")) continue;
-
-                    System.out.println("NEXT ITEM: " + gameItems[col]);
+                    if (gameItems[col].equals("0") || gameItems[col].isEmpty()) continue;
                     this.gObjs.add(GameObject.newInstance(gameItems[col], col*32, row*32));
                 }
 
@@ -221,7 +215,6 @@ public class GameWorld extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
 
         this.renderFrame();
-
         this.displaySplitScreen(g2);
         this.displayMiniMap(g2);
 

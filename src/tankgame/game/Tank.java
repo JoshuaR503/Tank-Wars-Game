@@ -7,8 +7,6 @@ import tankgame.ResourcePools;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -153,20 +151,19 @@ public class Tank extends GameObject implements Updatable, Colliable {
     }
 
     private void move(GameWorld gameWorld, float direction) {
-
         float vx = (float) (direction * Math.cos(Math.toRadians(angle)));
         float vy = (float) (direction * Math.sin(Math.toRadians(angle)));
         float newX = x + vx;
         float newY = y + vy;
 
-        boolean canMoveHorizontally = !gameWorld.willCollideWithWall(newX, y, img.getWidth(), img.getHeight());
-        boolean canMoveVertically = !gameWorld.willCollideWithWall(x, newY, img.getWidth(), img.getHeight());
+        boolean willCollideWithWallX = gameWorld.willCollideWithWall(newX, y, img.getWidth(), img.getHeight());
+        boolean willCollideWithWallY = gameWorld.willCollideWithWall(x, newY, img.getWidth(), img.getHeight());
 
-        if (canMoveHorizontally) {
+        if (!willCollideWithWallX) {
             x = newX;
         }
 
-        if (canMoveVertically) {
+        if (!willCollideWithWallY) {
             y = newY;
         }
 
@@ -224,11 +221,11 @@ public class Tank extends GameObject implements Updatable, Colliable {
     @Override
     public void onCollision(GameObject by) {
 
-        if (by instanceof Bullet) {
-
-            by.hasCollided = true;
-            System.out.println("This tank was hit by a bullet, decreasing life");
-        }
+//        if (by instanceof Bullet) {
+//
+//            by.hasCollided = true;
+//            System.out.println("This tank was hit by a bullet, decreasing life");
+//        }
 
         if (by instanceof BreakableWall) {
             // I think players should lose points if they hit a wall.
