@@ -47,6 +47,7 @@ public class ResourceManager {
         ResourceManager.sprites.put("health", loadSprite("powerups/health.png"));
         ResourceManager.sprites.put("shield", loadSprite("powerups/mshield.png"));
         ResourceManager.sprites.put("speed", loadSprite("powerups/speed.png"));
+        ResourceManager.sprites.put("shooting_speed", loadSprite("powerups/shooting_speed.png"));
     }
 
     // Sound
@@ -66,13 +67,9 @@ public class ResourceManager {
     private static void loadSounds() {
         try {
             ResourceManager.sounds.put("bg", loadSound("sounds/music_fixed.wav"));
-
             ResourceManager.sounds.put("bullet_shoot", loadSound("sounds/bullet_shoot.wav"));
             ResourceManager.sounds.put("explosion", loadSound("sounds/explosion.wav"));
-
-//            ResourceManager.sounds.put("bullet_collide", loadSound("sounds/bullet.wav"));
-//            ResourceManager.sounds.put("pickup", loadSound("sounds/pickup.wav"));
-//            ResourceManager.sounds.put("shooting", loadSound("sounds/shotfiring.wav"));
+            ResourceManager.sounds.put("pickup", loadSound("sounds/pickup.wav"));
 
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             throw new RuntimeException(e);

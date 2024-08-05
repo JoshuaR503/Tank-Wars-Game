@@ -1,7 +1,6 @@
 package tankgame.game.powerup;
 
 import tankgame.game.*;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
@@ -30,19 +29,26 @@ public abstract class PowerUp extends GameObject implements Updatable {
     // Template methods: https://www.digitalocean.com/community/tutorials/template-method-design-pattern-in-java
     // Default implementation that is common for all the subclasses
     public final void apply(Tank tank) {
+
         if (this.isAvailable) {
             this.isAvailable = false;
+
+            // Check if tank doesn't already have a power-up of this kind.
+            for (PowerUp powerUp : tank.getPowerUps()) {
+                if (powerUp.getClass() == this.getClass()) {
+                    System.out.println("Tank already has a power-up of this kind: " + this.getClass().getSimpleName());
+                    return;
+                }
+            }
+
             this.affectedTank = tank;
             this.activationTimeMillis = System.currentTimeMillis(); // Reset time so it doesn't get removed right after pick up.
 
-            // Call custom code from the subclass.
             this.applyEffect(tank);
-            // End of custom code from the subclass.
-
             tank.addPowerUp(this);
-
-            System.out.println("Enabled power up: " + this.getClass().getSimpleName());
-            System.out.println("Power up info: " + this.uniqueId + " at " + formatTime(this.activationTimeMillis));
+            // System.out.println("Enabled power up: " + this.getClass().getSimpleName());
+            // System.out.println("Power up info: " + this.uniqueId + " at " + formatTime(this.activationTimeMillis));
+            System.out.println("Current tank status: " + tank);
         }
     }
 
@@ -51,7 +57,7 @@ public abstract class PowerUp extends GameObject implements Updatable {
             this.removeEffect(tank);
             tank.removePowerUpById(this.getId());
             System.out.println("Disabled power up: " + this.getClass().getSimpleName());
-            System.out.println("Removed power-up: " + this.uniqueId + " at " + formatTime(System.currentTimeMillis()));
+//            System.out.println("Removed power-up: " + this.uniqueId + " at " + formatTime(System.currentTimeMillis()));
         }
     }
 

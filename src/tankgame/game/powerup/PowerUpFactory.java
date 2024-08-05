@@ -17,7 +17,8 @@ public final class PowerUpFactory {
 
     public static void init() {
         powerUpInfoMap.put("IncreaseDamage", new PowerUpInfo(IncreaseDamage.class, "damage"));
-            powerUpInfoMap.put("IncreaseSpeed", new PowerUpInfo(IncreaseSpeed.class, "speed"));
+        powerUpInfoMap.put("IncreaseSpeed", new PowerUpInfo(IncreaseSpeed.class, "speed"));
+        powerUpInfoMap.put("IncreaseShootingSpeed", new PowerUpInfo(IncreaseShootingSpeed.class, "shooting_speed"));
         powerUpInfoMap.put("RestoreHealth", new PowerUpInfo(RestoreHealth.class, "health"));
         powerUpInfoMap.put("Shield", new PowerUpInfo(Shield.class, "shield"));
 

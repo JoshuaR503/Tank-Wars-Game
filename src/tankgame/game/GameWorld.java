@@ -13,10 +13,12 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameWorld extends JPanel implements Runnable {
 
@@ -28,7 +30,7 @@ public class GameWorld extends JPanel implements Runnable {
     private int powerUps = 0;
 
     private static final ArrayList<GameObject> gObjs = new ArrayList<>(3000);
-    private static final ArrayList<Animation> animations = new ArrayList<>(3000);
+    private static final List<Animation> animations = new CopyOnWriteArrayList<>();
 
     private final Rectangle futureBounds = new Rectangle();
 
@@ -55,7 +57,9 @@ public class GameWorld extends JPanel implements Runnable {
                 }
 
                 for (Animation ani : animations) {
-                    ani.update();
+                    if (ani != null) {
+                        ani.update();
+                    }
                 }
 
                 this.checkCollisions();
@@ -239,12 +243,12 @@ public class GameWorld extends JPanel implements Runnable {
             gObj.draw(buffer);
         }
 
-        Iterator<Animation> iterator = animations.iterator();
-        while (iterator.hasNext()) {
-            Animation animation = iterator.next();
-            animation.draw(buffer);
-            if (animation.isComplete()) {
-                iterator.remove();
+        for (Animation animation : animations) {
+            if (animation != null) {
+                animation.draw(buffer);
+                if (animation.isComplete()) {
+                    animations.remove(animation);
+                }
             }
         }
     }

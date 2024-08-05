@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Tank class representing the player's tank in the game.
@@ -40,7 +41,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private float radius = GameConstants.DEFAULT_TANK_RADIUS;
     private float rotationSpeed = GameConstants.DEFAULT_TANK_ROTATION_SPEED;
     private boolean hasShield = GameConstants.DEFAULT_TANK_ACTIVE_SHIELD;
-    private final List<PowerUp> powerups = new ArrayList<>();
+    private final List<PowerUp> powerups = new CopyOnWriteArrayList<>();
 
     // Constructor
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
@@ -59,6 +60,10 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
     public int getScreenY() {
         return (int) screenY;
+    }
+
+    public List<PowerUp> getPowerUps() {
+        return powerups;
     }
 
     // Setters
@@ -95,7 +100,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
     }
 
     public void addPowerUp(PowerUp powerUp) {
-        System.out.println("Added power up to tank: " + powerUp.toString());
+//        System.out.println("Added power up to tank: " + powerUp.toString());
         this.powerups.add(powerUp);
     }
 
@@ -165,7 +170,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
             this.timeSinceLastShot = currentTime;
             var p = ResourcePools.getPooledInstance("bullet");
 
-            float offset = 10.0f; // Increased offset to ensure bullet is spawned outside the tank's hitbox and it doesn't hit itself.
+            float offset = 20.0f; // Increased offset to ensure bullet is spawned outside the tank's hitbox and it doesn't hit itself.
             float bulletX = x + img.getWidth() / 2.0f + (float) Math.cos(Math.toRadians(angle)) * (img.getWidth() / 2.0f + offset);
             float bulletY = y + img.getHeight() / 2.0f + (float) Math.sin(Math.toRadians(angle)) * (img.getHeight() / 2.0f + offset);
 
@@ -223,11 +228,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
             ResourceManager.getSound("explosion").play();
 
             if (!this.hasShield) {
-
-                System.out.println("Tank does not have a shield, applying damage of: "+ this.bulletDamage);
                 this.lives -= ((Bullet) by).getDamage();
-
-                System.out.println("Tank hit! Lives remaining: " + this.lives);
 
                 if (this.lives <= 0) {
                     System.out.println("Tank destroyed!");
@@ -318,4 +319,24 @@ public class Tank extends GameObject implements Updatable, Colliable {
             this.screenY = GameConstants.GAME_WORLD_HEIGHT - GameConstants.GAME_SCREEN_HEIGHT;
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Tank Details:\n");
+        sb.append("Position: (").append(x).append(", ").append(y).append(")\n");
+        sb.append("Speed: ").append(radius).append("\n");
+        sb.append("Rotation Speed: ").append(rotationSpeed).append("\n");
+        sb.append("Lives: ").append(lives).append("\n");
+        sb.append("Bullet Damage: ").append(bulletDamage).append("\n");
+        sb.append("Cooldown: ").append(coolDown).append("\n");
+        sb.append("Has Shield: ").append(hasShield).append("\n");
+        sb.append("Power-ups:\n");
+        for (PowerUp powerUp : powerups) {
+            sb.append(powerUp.toString()).append("\n");
+        }
+        return sb.toString();
+    }
+
+
 }
