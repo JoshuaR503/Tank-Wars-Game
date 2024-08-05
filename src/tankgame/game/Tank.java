@@ -4,10 +4,14 @@ import tankgame.GameConstants;
 import tankgame.ResourceManager;
 import tankgame.ResourcePools;
 import tankgame.game.powerup.PowerUp;
+import tankgame.game.powerup.PowerUpFactory;
+import tankgame.game.powerup.Shield;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tank class representing the player's tank in the game.
@@ -37,6 +41,8 @@ public class Tank extends GameObject implements Updatable, Colliable {
     // Dynamic attributes
     private int lives = 5;
     private int bulletDamage = 1;
+    private boolean hasShield = false;
+    private List<PowerUp> powerups = new ArrayList<>();
 
     // Constructor
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
@@ -65,6 +71,14 @@ public class Tank extends GameObject implements Updatable, Colliable {
         return bulletDamage;
     }
 
+    public boolean hasShield() {
+        return hasShield;
+    }
+
+    public List<PowerUp> getPowerUps() {
+        return new ArrayList<>(powerups); // Return a copy to avoid external modification
+    }
+
     // Setters
     void setX(float x) {
         this.x = x;
@@ -80,6 +94,18 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
     public void setBulletDamage(int bulletDamage) {
         this.bulletDamage = bulletDamage;
+    }
+
+    public void setShield(boolean hasShield) {
+        this.hasShield = hasShield;
+    }
+
+    public void addPowerUp(PowerUp powerUp) {
+        this.powerups.add(powerUp);
+    }
+
+    public void removePowerUpById(String id) {
+        this.powerups.removeIf(powerUp -> powerUp.getId().equals(id));
     }
 
     // Toggle methods for controls
@@ -194,22 +220,26 @@ public class Tank extends GameObject implements Updatable, Colliable {
     // Collisions
     @Override
     public void onCollision(GameObject by) {
+
         if (by instanceof BreakableWall) {
-            // I think players should lose points if they hit a wall.
+            // I think players should lose points if they intentionally hit a wall.
         }
 
         if (by instanceof Bullet) {
-            this.lives--;
-            System.out.println("Tank hit! Lives remaining: " + this.lives);
+            if (!this.hasShield) {
+                this.lives--;
+                System.out.println("Tank hit! Lives remaining: " + this.lives);
 
-            if (this.lives <= 0) {
-                System.out.println("Tank destroyed!");
-                // TODO: Handle tank destruction
+                if (this.lives <= 0) {
+                    System.out.println("Tank destroyed!");
+                    // TODO: Handle tank destruction
+                }
             }
         }
 
+
         if (by instanceof PowerUp) {
-            ((PowerUp) by).setAffectedTank(this);
+           ((PowerUp) by).apply(this);
         }
     }
 
@@ -220,10 +250,10 @@ public class Tank extends GameObject implements Updatable, Colliable {
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
-        drawLives(g2d);
+        drawTankStats(g2d);
     }
 
-    private void drawLives(Graphics2D g2d) {
+    private void drawTankStats(Graphics2D g2d) {
         int barWidth = 50;
         int barHeight = 5;
         int barX = (int) this.x + (this.img.getWidth() / 2) - (barWidth / 2);
@@ -241,6 +271,24 @@ public class Tank extends GameObject implements Updatable, Colliable {
         // Border of the health bar
         g2d.setColor(Color.darkGray);
         g2d.drawRect(barX, barY, barWidth, barHeight);
+
+        // Display power up image so the player knows whats up.
+        int powerUpY = barY - 20; // Small spacing in case there's more power-ups.
+        for (PowerUp powerUp : powerups) {
+
+            final BufferedImage powerUpImage = powerUp.img;
+
+            g2d.drawImage(powerUpImage, barX, powerUpY, null);
+
+            String className = powerUp.getClass().getSimpleName();
+            g2d.setColor(Color.WHITE);
+
+            int textX = barX + powerUpImage.getWidth() + 5;
+            int textY = powerUpY + powerUpImage.getHeight() / 2 + 5;
+            g2d.drawString( powerUp.getId() + " - " + className, textX, textY);
+
+            powerUpY -= powerUpImage.getHeight() + 10; // Stack icons and class names vertically
+        }
     }
 
     // Bounds and screen rendering methods

@@ -9,14 +9,16 @@ public class IncreasedDamage extends PowerUp {
     }
 
     @Override
-    public void apply(Tank tank) {
-        System.out.println("Power up expired, damage to default.");
+    public void applyEffect(Tank tank) {
+        System.out.println("Power applied, damage increased.");
         tank.setBulletDamage(tank.getBulletDamage() * 2);
+        tank.addPowerUp(this);
     }
 
     @Override
-    public void remove(Tank tank) {
+    public void removeEffect(Tank tank) {
         System.out.println("Power up expired, damage to default.");
         tank.setBulletDamage(tank.getBulletDamage() / 2);
+        tank.removePowerUpById(this.getId());
     }
 }

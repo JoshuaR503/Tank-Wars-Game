@@ -1,6 +1,7 @@
 package tankgame.game;
 
 import tankgame.ResourceManager;
+import tankgame.game.powerup.Shield;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -3,8 +3,8 @@ package tankgame.game;
 import tankgame.GameConstants;
 import tankgame.Launcher;
 import tankgame.ResourceManager;
-import tankgame.game.powerup.IncreasedDamage;
 import tankgame.game.powerup.PowerUp;
+import tankgame.game.powerup.PowerUpFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,6 @@ public class GameWorld extends JPanel implements Runnable {
 
     private static final ArrayList<GameObject> gObjs = new ArrayList<>(1000);
     private static final ArrayList<Animation> animations = new ArrayList<>(1000);
-    private static final ArrayList<PowerUp> powerUps = new ArrayList<>(100);
 
     private final Rectangle futureBounds = new Rectangle();
 
@@ -86,6 +85,8 @@ public class GameWorld extends JPanel implements Runnable {
     }
 
     public void InitializeGame() {
+        PowerUpFactory.init();
+
         GameObject.setGameWorld(this);
         this.world = new BufferedImage(GameConstants.GAME_WORLD_WIDTH,
                 GameConstants.GAME_WORLD_HEIGHT,
@@ -142,11 +143,7 @@ public class GameWorld extends JPanel implements Runnable {
         int x = rand.nextInt(GameConstants.GAME_WORLD_WIDTH);
         int y = rand.nextInt(GameConstants.GAME_WORLD_HEIGHT);
 
-        BufferedImage powerUpImage = ResourceManager.getSprite("shield");
-        PowerUp powerUp = new IncreasedDamage(x, y, powerUpImage);
-        System.out.println(powerUp);
-
-        addGameObject(powerUp);
+        GameWorld.addGameObject(PowerUpFactory.newRandomInstance(x, y));
     }
 
     // Collision related.
