@@ -3,7 +3,6 @@ package tankgame.game;
 import tankgame.GameConstants;
 import tankgame.Launcher;
 import tankgame.ResourceManager;
-import tankgame.game.powerup.PowerUp;
 import tankgame.game.powerup.PowerUpFactory;
 
 import javax.swing.*;
@@ -87,21 +86,9 @@ public class GameWorld extends JPanel implements Runnable {
     }
 
     public void InitializeGame() {
+
         PowerUpFactory.init();
-
         GameObject.setGameWorld(this);
-
-
-//        // Create the animation first to get its dimensions (THERE IS A BUG THAT RENDERS THINGS WAY OFF)
-//        Animation animation = new Animation(100, 300, ResourceManager.getAnimation("powerpick"), 1000);
-//
-//        // Create and add the power-up first
-//        PowerUp powerUp = PowerUpFactory.newRandomInstance(100+45, 300+45);
-//        GameWorld.addGameObject(powerUp);
-//
-//        // Then create the animation at the same coordinates
-//        GameWorld.createAnimation(animation);
-
 
         this.world = new BufferedImage(GameConstants.GAME_WORLD_WIDTH,
                 GameConstants.GAME_WORLD_HEIGHT,
