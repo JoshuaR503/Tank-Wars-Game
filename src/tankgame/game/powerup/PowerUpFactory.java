@@ -5,6 +5,7 @@ import java.util.*;
 
 import tankgame.ResourceManager;
 
+// TODO: Add a collidable, and if it collides with a wall or another Power up mark it as delete it.
 public final class PowerUpFactory {
 
     private static final Map<String, PowerUpInfo> powerUpInfoMap = new HashMap<>();
@@ -13,7 +14,9 @@ public final class PowerUpFactory {
     private static final Random random = new Random();
 
     public static void init() {
-        powerUpInfoMap.put("IncreasedDamage", new PowerUpInfo(IncreasedDamage.class, "shield"));
+        powerUpInfoMap.put("IncreaseDamage", new PowerUpInfo(IncreaseDamage.class, "damage"));
+        powerUpInfoMap.put("IncreaseSpeed", new PowerUpInfo(Shield.class, "speed"));
+        powerUpInfoMap.put("RestoreHealth", new PowerUpInfo(Shield.class, "health"));
         powerUpInfoMap.put("Shield", new PowerUpInfo(Shield.class, "shield"));
 
         // Is there really a need to keep track of only two keys? I do not know.
@@ -29,7 +32,6 @@ public final class PowerUpFactory {
         final BufferedImage powerUpImage = ResourceManager.getSprite(powerUpInfo.imageName);
 
         try {
-
             return powerUpInfo
                     .powerUpClass
                     .getDeclaredConstructor(float.class, float.class, BufferedImage.class)

@@ -79,7 +79,13 @@ public class ResourceManager {
         ResourceManager.sprites.put("bwall", loadSprite("wall/wall2.png"));
         ResourceManager.sprites.put("floor", loadSprite("floor/bg.bmp"));
         ResourceManager.sprites.put("bullet", loadSprite("bullet/bullet.jpg"));
+
+        // Power ups
+        ResourceManager.sprites.put("damage", loadSprite("powerups/damage.png"));
+        ResourceManager.sprites.put("health", loadSprite("powerups/health.png"));
         ResourceManager.sprites.put("shield", loadSprite("powerups/mshield.png"));
+        ResourceManager.sprites.put("speed", loadSprite("powerups/speed.png"));
+
     }
 
     public static void loadAssets() {

@@ -1,7 +1,9 @@
 package tankgame.game;
 
 import tankgame.ResourceManager;
+import tankgame.game.powerup.RestoreHealth;
 import tankgame.game.powerup.Shield;
+import tankgame.game.powerup.IncreaseSpeed;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -42,9 +44,9 @@ public abstract class GameObject {
         return switch (type) {
             case "9" -> new Wall(x, y, ResourceManager.getSprite("uwall"));
             case "3" -> new BreakableWall(x, y, ResourceManager.getSprite("bwall"));
-            case "4" -> new Speed(x, y, ResourceManager.getSprite("tank"));
+            case "4" -> new IncreaseSpeed(x, y, ResourceManager.getSprite("tank"));
             case "5" -> new Shield(x, y, ResourceManager.getSprite("tank"));
-            case "6" -> new Health(x, y, ResourceManager.getSprite("tank"));
+            case "6" -> new RestoreHealth(x, y, ResourceManager.getSprite("tank"));
             default -> throw new IllegalArgumentException("Unsupported type: " + type);
         };
     }

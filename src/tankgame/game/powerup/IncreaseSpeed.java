@@ -1,10 +1,11 @@
 package tankgame.game.powerup;
-import tankgame.game.Tank;
 
+import tankgame.game.Tank;
 import java.awt.image.BufferedImage;
 
-public class Shield extends PowerUp {
-    public Shield(float x, float y, BufferedImage img) {
+// TODO: Implement this class
+public class IncreaseSpeed extends PowerUp {
+    public IncreaseSpeed(float x, float y, BufferedImage img) {
         super(x, y, img);
     }
 
