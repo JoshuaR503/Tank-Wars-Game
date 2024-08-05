@@ -1,9 +1,9 @@
 package tankgame.game.powerup;
 
+import tankgame.GameConstants;
 import tankgame.game.Tank;
 import java.awt.image.BufferedImage;
 
-// TODO: Implement this class
 public class IncreaseSpeed extends PowerUp {
     public IncreaseSpeed(float x, float y, BufferedImage img) {
         super(x, y, img);
@@ -11,13 +11,12 @@ public class IncreaseSpeed extends PowerUp {
 
     @Override
     public void applyEffect(Tank tank) {
-        System.out.println("Power applied, shield active.");
-        tank.setShield(true);
+        tank.setSpeed(5);
+
     }
 
     @Override
     public void removeEffect(Tank tank) {
-        System.out.println("Shield removed because it was marked for deletion.");
-        tank.setShield(false);
+        tank.setSpeed(GameConstants.DEFAULT_TANK_RADIUS);
     }
 }

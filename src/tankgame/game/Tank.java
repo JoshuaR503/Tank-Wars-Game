@@ -37,11 +37,9 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private int lives = GameConstants.DEFAULT_TANK_LIVES;
     private int bulletDamage = GameConstants.DEFAULT_TANK_BULLET_DAMAGE;
     private long coolDown = GameConstants.DEFAULT_TANK_COOLDOWN;
-
     private float radius = GameConstants.DEFAULT_TANK_RADIUS;
     private float rotationSpeed = GameConstants.DEFAULT_TANK_ROTATION_SPEED;
-
-    private boolean hasShield = false;
+    private boolean hasShield = GameConstants.DEFAULT_TANK_ACTIVE_SHIELD;
     private final List<PowerUp> powerups = new ArrayList<>();
 
     // Constructor
@@ -72,7 +70,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
         this.y = y;
     }
 
-    public void setR(float R) {
+    public void setSpeed(float R) {
         this.radius = R;
     }
 

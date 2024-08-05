@@ -1,4 +1,5 @@
 package tankgame.game.powerup;
+import tankgame.GameConstants;
 import tankgame.game.Tank;
 
 import java.awt.image.BufferedImage;
@@ -10,13 +11,11 @@ public class Shield extends PowerUp {
 
     @Override
     public void applyEffect(Tank tank) {
-        System.out.println("Power applied, shield active.");
         tank.setShield(true);
     }
 
     @Override
     public void removeEffect(Tank tank) {
-        System.out.println("Shield removed because it was marked for deletion.");
-        tank.setShield(false);
+        tank.setShield(GameConstants.DEFAULT_TANK_ACTIVE_SHIELD);
     }
 }

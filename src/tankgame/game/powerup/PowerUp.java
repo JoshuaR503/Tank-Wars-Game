@@ -1,6 +1,5 @@
 package tankgame.game.powerup;
 
-import tankgame.ResourceManager;
 import tankgame.game.*;
 
 import java.awt.*;
@@ -41,7 +40,9 @@ public abstract class PowerUp extends GameObject implements Updatable {
             // End of custom code from the subclass.
 
             tank.addPowerUp(this);
-            System.out.println("Applied power-up: " + this.uniqueId + " at " + formatTime(this.activationTimeMillis));
+
+            System.out.println("Enabled power up: " + this.getClass().getSimpleName());
+            System.out.println("Power up info: " + this.uniqueId + " at " + formatTime(this.activationTimeMillis));
         }
     }
 
@@ -49,6 +50,7 @@ public abstract class PowerUp extends GameObject implements Updatable {
         if (this.affectedTank != null) {
             this.removeEffect(tank);
             tank.removePowerUpById(this.getId());
+            System.out.println("Disabled power up: " + this.getClass().getSimpleName());
             System.out.println("Removed power-up: " + this.uniqueId + " at " + formatTime(System.currentTimeMillis()));
         }
     }

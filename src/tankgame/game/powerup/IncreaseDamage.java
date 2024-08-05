@@ -1,4 +1,5 @@
 package tankgame.game.powerup;
+import tankgame.GameConstants;
 import tankgame.game.Tank;
 
 import java.awt.image.BufferedImage;
@@ -11,13 +12,11 @@ public class IncreaseDamage extends PowerUp {
 
     @Override
     public void applyEffect(Tank tank) {
-        System.out.println("Power applied, damage increased.");
         tank.setBulletDamage(5);
     }
 
     @Override
     public void removeEffect(Tank tank) {
-        System.out.println("Power up expired, damage to default.");
-        tank.setBulletDamage(1);
+        tank.setBulletDamage(GameConstants.DEFAULT_TANK_BULLET_DAMAGE);
     }
 }
