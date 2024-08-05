@@ -22,7 +22,7 @@ public class BreakableWall extends GameObject implements Colliable {
 
             if (life <= 0) {
                 this.markCollision();
-                GameWorld.createAnimation(new Animation(x, y, ResourceManager.getAnimation("puffsmoke")));
+                GameWorld.createAnimation(new Animation(x, y, ResourceManager.getAnimation("puffsmoke"), 3_000));
             }
 
             System.out.println("breakable wall collision with bullet, reducing life: " + life);

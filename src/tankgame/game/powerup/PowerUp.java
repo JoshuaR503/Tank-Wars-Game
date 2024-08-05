@@ -1,8 +1,7 @@
 package tankgame.game.powerup;
 
-import tankgame.game.GameObject;
-import tankgame.game.Tank;
-import tankgame.game.Updatable;
+import tankgame.ResourceManager;
+import tankgame.game.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,7 +11,7 @@ import java.util.UUID;
 
 public abstract class PowerUp extends GameObject implements Updatable {
 
-    private static final long DURATION_MILLIS = 30_000; // Duration in milliseconds (3 * 10000)
+    private static final long DURATION_MILLIS = 30_000; // Duration in milliseconds
 
     private final String uniqueId;
     private long activationTimeMillis;

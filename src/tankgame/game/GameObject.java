@@ -22,6 +22,11 @@ public abstract class GameObject {
         hitbox = new Rectangle((int) x, (int) y, img.getWidth(), img.getHeight());
     }
 
+    // Getters
+
+
+    // Setters
+
     public static void setGameWorld(GameWorld gameWorld) {
         GameObject.gameWorld = gameWorld;
     }

@@ -63,10 +63,9 @@ public class GameWorld extends JPanel implements Runnable {
 
                 gObjs.removeIf(GameObject::hasCollided);
 
-                // Spawn power-ups every 500 ticks
-                if (this.tick % 500 == 0 && powerUps < 50) {
+                // Spawn power-ups every few ticks
+                if (this.tick % 100 == 0 && powerUps < 50) {
                     powerUps++;
-                    System.out.println("Power ups on screen: " + powerUps);
                     spawnPowerUp();
                 }
 
@@ -91,6 +90,19 @@ public class GameWorld extends JPanel implements Runnable {
         PowerUpFactory.init();
 
         GameObject.setGameWorld(this);
+
+
+//        // Create the animation first to get its dimensions (THERE IS A BUG THAT RENDERS THINGS WAY OFF)
+//        Animation animation = new Animation(100, 300, ResourceManager.getAnimation("powerpick"), 1000);
+//
+//        // Create and add the power-up first
+//        PowerUp powerUp = PowerUpFactory.newRandomInstance(100+45, 300+45);
+//        GameWorld.addGameObject(powerUp);
+//
+//        // Then create the animation at the same coordinates
+//        GameWorld.createAnimation(animation);
+
+
         this.world = new BufferedImage(GameConstants.GAME_WORLD_WIDTH,
                 GameConstants.GAME_WORLD_HEIGHT,
                 BufferedImage.TYPE_INT_RGB);
@@ -142,12 +154,17 @@ public class GameWorld extends JPanel implements Runnable {
 
     // Power up related.
     private void spawnPowerUp() {
+        // TODO: Make sure it doesn't show up where there are walls.
         Random rand = new Random();
         int x = rand.nextInt(GameConstants.GAME_WORLD_WIDTH);
         int y = rand.nextInt(GameConstants.GAME_WORLD_HEIGHT);
 
-        GameWorld.addGameObject(PowerUpFactory.newRandomInstance(x, y));
+        // Requires small offset because it gets trippy...
+        GameWorld.addGameObject(PowerUpFactory.newRandomInstance(x + 45, y + 45));
+
+        GameWorld.createAnimation(new Animation(x, y, ResourceManager.getAnimation("powerpick"), 75));
     }
+
 
     // Collision related.
     private void checkCollisions() {

@@ -240,9 +240,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
             }
         }
 
-
         if (by instanceof PowerUp) {
-            System.out.println("Tank power-ups applied: " + powerups.size());
            ((PowerUp) by).apply(this);
         }
     }
