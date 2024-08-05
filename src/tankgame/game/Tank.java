@@ -4,8 +4,6 @@ import tankgame.GameConstants;
 import tankgame.ResourceManager;
 import tankgame.ResourcePools;
 import tankgame.game.powerup.PowerUp;
-import tankgame.game.powerup.PowerUpFactory;
-import tankgame.game.powerup.Shield;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -42,7 +40,8 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private int lives = 5;
     private int bulletDamage = 1;
     private boolean hasShield = false;
-    private List<PowerUp> powerups = new ArrayList<>();
+
+    private final List<PowerUp> powerups = new ArrayList<>();
 
     // Constructor
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
@@ -177,7 +176,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
             float bulletY = y + img.getHeight() / 2.0f + (float) Math.sin(Math.toRadians(angle)) * (img.getHeight() / 2.0f + offset);
 
 
-            p.initObject(bulletX, bulletY, angle, bulletDamage);
+            p.initObject(bulletX, bulletY, angle, this.getBulletDamage());
             Bullet b = (Bullet) p;
 
             System.out.println(b);
@@ -243,6 +242,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
 
         if (by instanceof PowerUp) {
+            System.out.println("Tank power-ups applied: " + powerups.size());
            ((PowerUp) by).apply(this);
         }
     }

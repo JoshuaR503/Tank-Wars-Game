@@ -14,13 +14,11 @@ public class Shield extends PowerUp {
     public void applyEffect(Tank tank) {
         System.out.println("Power applied, shield active.");
         tank.setShield(true);
-        tank.addPowerUp(this);
     }
 
     @Override
     public void removeEffect(Tank tank) {
         System.out.println("Shield removed because it was marked for deletion.");
         tank.setShield(false);
-        tank.removePowerUpById(this.getId());
     }
 }
