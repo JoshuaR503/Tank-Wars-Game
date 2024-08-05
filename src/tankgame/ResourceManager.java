@@ -46,9 +46,11 @@ public class ResourceManager {
         ResourceManager.sprites.put("damage", loadSprite("powerups/damage.png"));
         ResourceManager.sprites.put("health", loadSprite("powerups/health.png"));
         ResourceManager.sprites.put("shield", loadSprite("powerups/mshield.png"));
+
+        ResourceManager.sprites.put("pp", loadSprite("powerups/pp.png"));
+
         ResourceManager.sprites.put("speed", loadSprite("powerups/speed.png"));
         ResourceManager.sprites.put("shooting_speed", loadSprite("powerups/shooting_speed.png"));
-        ResourceManager.sprites.put("peso_pluma", loadSprite("powerups/peso_pluma.png"));
     }
 
     // Sound
@@ -68,6 +70,8 @@ public class ResourceManager {
     private static void loadSounds() {
         try {
             ResourceManager.sounds.put("bg", loadSound("sounds/music_fixed.wav"));
+            ResourceManager.sounds.put("bgm", loadSound("sounds/bgm.wav"));
+
             ResourceManager.sounds.put("peso_pluma", loadSound("sounds/peso_pluma.wav"));
 
             ResourceManager.sounds.put("bullet_shoot", loadSound("sounds/bullet_shoot.wav"));

@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public class BreakableWall extends GameObject implements Colliable {
 
-    private int life = 5;
+    private int life = 10;
 
     public BreakableWall(float x, float y, BufferedImage img) {
         super(x, y, img);
@@ -18,9 +18,11 @@ public class BreakableWall extends GameObject implements Colliable {
     public void onCollision(GameObject by) {
 
         if (by instanceof Bullet) {
+            System.out.println("Hit walll with bullet of: " + by);
+
             ResourceManager.getSound("explosion").play();
 
-            life =- ((Bullet) by).getDamage();
+            life -= ((Bullet) by).getDamage();
 
             if (life <= 0) {
                 this.markCollision();

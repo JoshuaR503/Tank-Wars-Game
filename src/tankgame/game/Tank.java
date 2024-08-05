@@ -3,12 +3,14 @@ package tankgame.game;
 import tankgame.GameConstants;
 import tankgame.ResourceManager;
 import tankgame.ResourcePools;
+import tankgame.game.powerup.PesoPluma;
 import tankgame.game.powerup.PowerUp;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -102,6 +104,10 @@ public class Tank extends GameObject implements Updatable, Colliable {
     public void addPowerUp(PowerUp powerUp) {
 //        System.out.println("Added power up to tank: " + powerUp.toString());
         this.powerups.add(powerUp);
+    }
+
+    public void clearPowerUps() {
+        this.powerups.removeIf(powerUp -> !(powerUp instanceof PesoPluma));
     }
 
     public void removePowerUpById(String id) {

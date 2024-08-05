@@ -51,7 +51,7 @@ public class GameWorld extends JPanel implements Runnable {
     @Override
     public void run() {
         this.resetGame();
-        soundManager.playBackgroundMusic("bg");
+        soundManager.playBackgroundMusic("bgm");
 
         try {
             while (true) {
