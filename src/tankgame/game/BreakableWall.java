@@ -1,6 +1,7 @@
 package tankgame.game;
 
 import tankgame.ResourceManager;
+import tankgame.game.powerup.PowerUp;
 
 import java.awt.image.BufferedImage;
 
@@ -27,6 +28,16 @@ public class BreakableWall extends GameObject implements Colliable {
             }
 
             System.out.println("breakable wall collision with bullet, reducing life: " + life);
+        }
+
+        if (by instanceof PowerUp) {
+
+            ((PowerUp) by).setUnavailable();
+
+            by.markCollision();
+
+            System.out.println("Power up named: " + by.getClass().getSimpleName() + " collided with wall at : [x= " + by.getHitbox().x + ", y= " + by.getHitbox().y + "]");
+            System.out.println("Marked for immediate removal...");
         }
     }
 

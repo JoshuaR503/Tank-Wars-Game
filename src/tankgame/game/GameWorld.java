@@ -27,8 +27,8 @@ public class GameWorld extends JPanel implements Runnable {
     private long tick = 0;
     private int powerUps = 0;
 
-    private static final ArrayList<GameObject> gObjs = new ArrayList<>(1000);
-    private static final ArrayList<Animation> animations = new ArrayList<>(1000);
+    private static final ArrayList<GameObject> gObjs = new ArrayList<>(3000);
+    private static final ArrayList<Animation> animations = new ArrayList<>(3000);
 
     private final Rectangle futureBounds = new Rectangle();
 
@@ -63,7 +63,9 @@ public class GameWorld extends JPanel implements Runnable {
                 gObjs.removeIf(GameObject::hasCollided);
 
                 // Spawn power-ups every few ticks
-                if (this.tick % 100 == 0 && powerUps < 50) {
+                if (this.tick % 100 == 0 && powerUps < GameConstants.GAME_WORLD_POWERUPS_LIMIT) {
+
+                    System.out.println("Current game objects: " + gObjs.size());
                     // powerUps++;
                     spawnPowerUp();
                 }

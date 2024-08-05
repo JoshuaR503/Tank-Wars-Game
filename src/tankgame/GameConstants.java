@@ -13,6 +13,8 @@ public class GameConstants {
     public static final int END_MENU_SCREEN_WIDTH = 500;
     public static final int END_MENU_SCREEN_HEIGHT = 500;
 
+    public static final int GAME_WORLD_POWERUPS_LIMIT = 1000;
+
     // DEFAULT TANK ATTRIBUTES
     public static final int DEFAULT_TANK_LIVES = 5;
     public static final int DEFAULT_TANK_BULLET_DAMAGE = 1;

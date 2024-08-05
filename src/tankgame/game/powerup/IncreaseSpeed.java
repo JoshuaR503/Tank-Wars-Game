@@ -12,7 +12,6 @@ public class IncreaseSpeed extends PowerUp {
     @Override
     public void applyEffect(Tank tank) {
         tank.setSpeed(5);
-
     }
 
     @Override

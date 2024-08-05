@@ -60,6 +60,11 @@ public abstract class PowerUp extends GameObject implements Updatable {
         return this.uniqueId;
     }
 
+    // Setters
+    public void setUnavailable() {
+        this.isAvailable = false;
+    }
+
     // Behavior
     @Override
     public void update() {
@@ -71,6 +76,7 @@ public abstract class PowerUp extends GameObject implements Updatable {
             this.markCollision(); // Mark for removal
         }
     }
+
 
     // Drawing
     @Override
