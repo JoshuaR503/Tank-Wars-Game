@@ -17,10 +17,11 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
     private float vx;
     private float vy;
     private float angle;
-    private final float R = 4;
 
     // Dynamic attributes
+    // TODO: ALLOW SPEED UPDATE
     private int damage;
+    private final float R = 4;
 
     // Constructor
     // DO NOT REMOVE

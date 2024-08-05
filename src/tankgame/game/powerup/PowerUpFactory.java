@@ -16,13 +16,14 @@ public final class PowerUpFactory {
     private static final Random random = new Random();
 
     public static void init() {
+        powerUpInfoMap.put("PesoPluma", new PowerUpInfo(PesoPluma.class, "shield"));
         powerUpInfoMap.put("IncreaseDamage", new PowerUpInfo(IncreaseDamage.class, "damage"));
         powerUpInfoMap.put("IncreaseSpeed", new PowerUpInfo(IncreaseSpeed.class, "speed"));
         powerUpInfoMap.put("IncreaseShootingSpeed", new PowerUpInfo(IncreaseShootingSpeed.class, "shooting_speed"));
         powerUpInfoMap.put("RestoreHealth", new PowerUpInfo(RestoreHealth.class, "health"));
-        powerUpInfoMap.put("Shield", new PowerUpInfo(Shield.class, "shield"));
+//        powerUpInfoMap.put("Shield", new PowerUpInfo(Shield.class, "shield"));
 
-        // Is there really a need to keep track of only two keys? I do not know.
+        // Is there really a need to keep track of only five keys? I do not know.
         keys = powerUpInfoMap.keySet().toArray(new String[0]);
     }
 
@@ -30,6 +31,9 @@ public final class PowerUpFactory {
 
         // Get the power-up information using a random key.
         final PowerUpInfo powerUpInfo = powerUpInfoMap.get(keys[random.nextInt(keys.length)]);
+
+
+        System.out.println(powerUpInfo.imageName);
 
         // Get the image for the power-up using the image name from the info.
         final BufferedImage powerUpImage = ResourceManager.getSprite(powerUpInfo.imageName);

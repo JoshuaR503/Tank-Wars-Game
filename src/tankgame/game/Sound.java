@@ -19,10 +19,6 @@ public class Sound {
     }
 
     public void play() {
-//        if (clip.isRunning()) {
-//            clip.stop();
-//        }
-
         clip.setFramePosition(0);
         clip.start();
     }
@@ -31,7 +27,7 @@ public class Sound {
         this.clip.stop();
     }
 
-    public void loopContinusly() {
+    public void loopContinuously() {
         this.clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 

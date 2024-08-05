@@ -33,17 +33,26 @@ public class GameWorld extends JPanel implements Runnable {
     private static final List<Animation> animations = new CopyOnWriteArrayList<>();
 
     private final Rectangle futureBounds = new Rectangle();
+    private static SoundManager soundManager;
 
     static double scaleFactor = .2;
 
     public GameWorld(Launcher lf) {
         this.lf = lf;
+
+        soundManager = new SoundManager();
+    }
+
+    public static SoundManager getSoundManager() {
+        return soundManager;
     }
 
     // State related.
     @Override
     public void run() {
         this.resetGame();
+        soundManager.playBackgroundMusic("bg");
+
         try {
             while (true) {
                 this.tick++;
