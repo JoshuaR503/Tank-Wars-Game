@@ -29,7 +29,8 @@ public abstract class PowerUp extends GameObject implements Updatable {
     protected abstract void applyEffect(Tank tank);
     protected abstract void removeEffect(Tank tank);
 
-    // Default implementation that is common for all subclasses
+    // Template methods: https://www.digitalocean.com/community/tutorials/template-method-design-pattern-in-java
+    // Default implementation that is common for all the subclasses
     public final void apply(Tank tank) {
         if (this.isAvailable) {
             this.isAvailable = false;
@@ -83,7 +84,7 @@ public abstract class PowerUp extends GameObject implements Updatable {
     public String toString() {
         String activationTimeFormatted = activationTimeMillis > 0 ? formatTime(activationTimeMillis) : "N/A";
         String removalTimeFormatted = activationTimeMillis > 0 ? formatTime(activationTimeMillis + DURATION_MILLIS) : "N/A";
-        return "Power-up information: x=" + x + ", y=" + y + ", activation time=" + activationTimeFormatted + ", removal time=" + removalTimeFormatted;
+        return "Power-up " + this.getClass().getSimpleName() + ": [x=" + x + ", y=" + y + ", activation time=" + activationTimeFormatted + ", removal time=" + removalTimeFormatted + "]";
     }
 
     private String formatTime(long timeMillis) {

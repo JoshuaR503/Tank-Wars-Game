@@ -26,6 +26,7 @@ public class GameWorld extends JPanel implements Runnable {
     private Tank t2;
     private final Launcher lf;
     private long tick = 0;
+    private int powerUps = 0;
 
     private static final ArrayList<GameObject> gObjs = new ArrayList<>(1000);
     private static final ArrayList<Animation> animations = new ArrayList<>(1000);
@@ -63,7 +64,9 @@ public class GameWorld extends JPanel implements Runnable {
                 gObjs.removeIf(GameObject::hasCollided);
 
                 // Spawn power-ups every 500 ticks
-                if (this.tick % 500 == 0) {
+                if (this.tick % 500 == 0 && powerUps < 50) {
+                    powerUps++;
+                    System.out.println("Power ups on screen: " + powerUps);
                     spawnPowerUp();
                 }
 

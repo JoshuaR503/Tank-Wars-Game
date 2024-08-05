@@ -19,6 +19,9 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
     private float angle;
     private final float R = 2;
 
+    // Dynamic attributes
+    private int damage;
+
     // Constructor
     // DO NOT REMOVE
     public Bullet(BufferedImage img) {
@@ -26,17 +29,29 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
         this.vx = 0;
         this.vy = 0;
         this.angle = 0;
+        this.damage = 0;
     }
 
     @Override
-    public void initObject(float x, float y, float angle) {
+    public void initObject(float x, float y, float angle, int damage) {
         this.x = x;
         this.y = y;
         this.angle = angle;
+        this.damage = damage;
         this.hitbox.setLocation((int) x, (int) y);
     }
 
-    // Behavior.
+    // Getters
+    public int getDamage() {
+        return damage;
+    }
+
+    // Setters
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    // Behavior
     @Override
     public void update() {
         vx = Math.round(R * Math.cos(Math.toRadians(angle)));
@@ -47,15 +62,18 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
         this.hitbox.setLocation((int) x, (int) y);
     }
 
-    // Collision.
+    // Bounds
     private void checkBorder() {
         if (x < 30 || y < 40 || x >= GameConstants.GAME_WORLD_WIDTH - 88 || y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
             // Bullet goes out of bounds, mark itself to removal.
             System.out.println("Marked bullet out of bounds");
             this.markCollision();
+
+            // TODO: Add animation :3
         }
     }
 
+    // Collision
     @Override
     public void onCollision(GameObject by) {
         if (by instanceof Bullet) {
@@ -64,12 +82,20 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
         }
     }
 
-    // Drawing.
+    // Drawing
     @Override
     public void draw(Graphics g) {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.img.getWidth() / 2.0, this.img.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawImage(this.img, rotation, null);
+    }
+
+    @Override
+    public String toString() {
+        return "Bullet {" +
+                "spawn position: (" + x + ", " + y + ")," +
+                " damage: " + damage +
+                '}';
     }
 }

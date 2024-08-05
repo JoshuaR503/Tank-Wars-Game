@@ -101,6 +101,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
     }
 
     public void addPowerUp(PowerUp powerUp) {
+        System.out.println("Added power up to tank: " + powerUp.toString());
         this.powerups.add(powerUp);
     }
 
@@ -170,16 +171,16 @@ public class Tank extends GameObject implements Updatable, Colliable {
             this.timeSinceLastShot = currentTime;
             var p = ResourcePools.getPooledInstance("bullet");
 
+
             float offset = 20.0f; // Increased offset to ensure bullet is spawned outside the tank's hitbox
             float bulletX = x + img.getWidth() / 2.0f + (float) Math.cos(Math.toRadians(angle)) * (img.getWidth() / 2.0f + offset);
             float bulletY = y + img.getHeight() / 2.0f + (float) Math.sin(Math.toRadians(angle)) * (img.getHeight() / 2.0f + offset);
 
-            p.initObject(bulletX, bulletY, angle);
+
+            p.initObject(bulletX, bulletY, angle, bulletDamage);
             Bullet b = (Bullet) p;
 
-            System.out.println("Bullet spawn position: (" + bulletX + ", " + bulletY + ")");
-            System.out.println("Tank hitbox position: (" + x + ", " + y + ")");
-            System.out.println("Bullet hitbox before init: " + b.getHitbox());
+            System.out.println(b);
 
             GameWorld.addGameObject((b));
             ResourceManager.getSound("shooting").play();
@@ -227,7 +228,10 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
         if (by instanceof Bullet) {
             if (!this.hasShield) {
-                this.lives--;
+
+                System.out.println("Tank does not have a shield, applying damage of: "+ this.bulletDamage);
+                this.lives -= ((Bullet) by).getDamage();
+
                 System.out.println("Tank hit! Lives remaining: " + this.lives);
 
                 if (this.lives <= 0) {
@@ -285,7 +289,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
             int textX = barX + powerUpImage.getWidth() + 5;
             int textY = powerUpY + powerUpImage.getHeight() / 2 + 5;
-            g2d.drawString( powerUp.getId() + " - " + className, textX, textY);
+            g2d.drawString(  className, textX, textY);
 
             powerUpY -= powerUpImage.getHeight() + 10; // Stack icons and class names vertically
         }
