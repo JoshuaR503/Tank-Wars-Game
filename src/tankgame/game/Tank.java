@@ -24,8 +24,6 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private float vx;
     private float vy;
     private float angle;
-    private float R = 2;
-    private float ROTATIONSPEED = 2.0f;
 
     private boolean UpPressed;
     private boolean DownPressed;
@@ -33,14 +31,17 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private boolean LeftPressed;
     private boolean shootPressed;
 
-    private long coolDown = 500;
     private long timeSinceLastShot = 0;
 
     // Dynamic attributes
-    private int lives = 5;
-    private int bulletDamage = 1;
-    private boolean hasShield = false;
+    private int lives = GameConstants.DEFAULT_TANK_LIVES;
+    private int bulletDamage = GameConstants.DEFAULT_TANK_BULLET_DAMAGE;
+    private long coolDown = GameConstants.DEFAULT_TANK_COOLDOWN;
 
+    private float radius = GameConstants.DEFAULT_TANK_RADIUS;
+    private float rotationSpeed = GameConstants.DEFAULT_TANK_ROTATION_SPEED;
+
+    private boolean hasShield = false;
     private final List<PowerUp> powerups = new ArrayList<>();
 
     // Constructor
@@ -62,22 +63,6 @@ public class Tank extends GameObject implements Updatable, Colliable {
         return (int) screenY;
     }
 
-    public int getLives() {
-        return lives;
-    }
-
-    public int getBulletDamage() {
-        return bulletDamage;
-    }
-
-    public boolean hasShield() {
-        return hasShield;
-    }
-
-    public List<PowerUp> getPowerUps() {
-        return new ArrayList<>(powerups); // Return a copy to avoid external modification
-    }
-
     // Setters
     void setX(float x) {
         this.x = x;
@@ -87,7 +72,19 @@ public class Tank extends GameObject implements Updatable, Colliable {
         this.y = y;
     }
 
-    protected void setLives(int lives) {
+    public void setR(float R) {
+        this.radius = R;
+    }
+
+    public void setRotationSpeed(float rotationSpeed) {
+        this.rotationSpeed = rotationSpeed;
+    }
+
+    public void setCoolDown(long coolDown) {
+        this.coolDown = coolDown;
+    }
+
+    public void setLives(int lives) {
         this.lives = lives;
     }
 
@@ -153,10 +150,10 @@ public class Tank extends GameObject implements Updatable, Colliable {
     @Override
     public void update() {
         if (this.UpPressed) {
-            move(gameWorld, R);
+            move(gameWorld, this.radius);
         }
         if (this.DownPressed) {
-            move(gameWorld, -R);
+            move(gameWorld, -this.radius);
         }
         if (this.LeftPressed) {
             this.rotateLeft();
@@ -170,13 +167,11 @@ public class Tank extends GameObject implements Updatable, Colliable {
             this.timeSinceLastShot = currentTime;
             var p = ResourcePools.getPooledInstance("bullet");
 
-
-            float offset = 20.0f; // Increased offset to ensure bullet is spawned outside the tank's hitbox
+            float offset = 10.0f; // Increased offset to ensure bullet is spawned outside the tank's hitbox and it doesn't hit itself.
             float bulletX = x + img.getWidth() / 2.0f + (float) Math.cos(Math.toRadians(angle)) * (img.getWidth() / 2.0f + offset);
             float bulletY = y + img.getHeight() / 2.0f + (float) Math.sin(Math.toRadians(angle)) * (img.getHeight() / 2.0f + offset);
 
-
-            p.initObject(bulletX, bulletY, angle, this.getBulletDamage());
+            p.initObject(bulletX, bulletY, angle, this.bulletDamage);
             Bullet b = (Bullet) p;
 
             System.out.println(b);
@@ -210,11 +205,11 @@ public class Tank extends GameObject implements Updatable, Colliable {
     }
 
     private void rotateLeft() {
-        this.angle -= this.ROTATIONSPEED;
+        this.angle -= this.rotationSpeed;
     }
 
     private void rotateRight() {
-        this.angle += this.ROTATIONSPEED;
+        this.angle += this.rotationSpeed;
     }
 
     // Collisions
