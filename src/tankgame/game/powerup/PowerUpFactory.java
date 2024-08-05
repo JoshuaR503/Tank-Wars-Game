@@ -1,7 +1,9 @@
 package tankgame.game.powerup;
 
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import tankgame.ResourceManager;
 
@@ -15,8 +17,8 @@ public final class PowerUpFactory {
 
     public static void init() {
         powerUpInfoMap.put("IncreaseDamage", new PowerUpInfo(IncreaseDamage.class, "damage"));
-        powerUpInfoMap.put("IncreaseSpeed", new PowerUpInfo(Shield.class, "speed"));
-        powerUpInfoMap.put("RestoreHealth", new PowerUpInfo(Shield.class, "health"));
+            powerUpInfoMap.put("IncreaseSpeed", new PowerUpInfo(IncreaseSpeed.class, "speed"));
+        powerUpInfoMap.put("RestoreHealth", new PowerUpInfo(RestoreHealth.class, "health"));
         powerUpInfoMap.put("Shield", new PowerUpInfo(Shield.class, "shield"));
 
         // Is there really a need to keep track of only two keys? I do not know.

@@ -12,17 +12,18 @@ public class BreakableWall extends GameObject implements Colliable {
         super(x, y, img);
     }
 
+    // Behavior.
     @Override
     public void onCollision(GameObject by) {
 
         if (by instanceof Bullet) {
+            ResourceManager.getSound("explosion").play();
 
-            // TODO: reduce by the bullet's amount of damage (i.e) if there is a power up.
-            life--;
+            life =- ((Bullet) by).getDamage();
 
             if (life <= 0) {
                 this.markCollision();
-                GameWorld.createAnimation(new Animation(x, y, ResourceManager.getAnimation("puffsmoke"), 3_000));
+                GameWorld.createAnimation(new Animation(x, y, ResourceManager.getAnimation("puffsmoke")));
             }
 
             System.out.println("breakable wall collision with bullet, reducing life: " + life);

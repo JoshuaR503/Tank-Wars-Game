@@ -64,7 +64,7 @@ public class GameWorld extends JPanel implements Runnable {
 
                 // Spawn power-ups every few ticks
                 if (this.tick % 100 == 0 && powerUps < 50) {
-                    powerUps++;
+                    // powerUps++;
                     spawnPowerUp();
                 }
 

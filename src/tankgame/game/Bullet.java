@@ -17,7 +17,7 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
     private float vx;
     private float vy;
     private float angle;
-    private final float R = 2;
+    private final float R = 4;
 
     // Dynamic attributes
     private int damage;
@@ -64,7 +64,7 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
 
     // Bounds
     private void checkBorder() {
-        if (x < 30 || y < 40 || x >= GameConstants.GAME_WORLD_WIDTH - 88 || y >= GameConstants.GAME_WORLD_HEIGHT - 80) {
+        if (x >= GameConstants.GAME_WORLD_WIDTH  || y >= GameConstants.GAME_WORLD_HEIGHT ) {
             // Bullet goes out of bounds, mark itself to removal.
             System.out.println("Marked bullet out of bounds");
             this.markCollision();

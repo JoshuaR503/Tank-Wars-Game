@@ -19,9 +19,9 @@ public class Sound {
     }
 
     public void play() {
-        if (clip.isRunning()) {
-            clip.stop();
-        }
+//        if (clip.isRunning()) {
+//            clip.stop();
+//        }
 
         clip.setFramePosition(0);
         clip.start();

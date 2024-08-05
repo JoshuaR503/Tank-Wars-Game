@@ -182,7 +182,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
             System.out.println(b);
 
             GameWorld.addGameObject((b));
-            ResourceManager.getSound("shooting").play();
+            ResourceManager.getSound("bullet_shoot").play();
         }
 
         centerScreen();
@@ -226,6 +226,9 @@ public class Tank extends GameObject implements Updatable, Colliable {
         }
 
         if (by instanceof Bullet) {
+
+            ResourceManager.getSound("explosion").play();
+
             if (!this.hasShield) {
 
                 System.out.println("Tank does not have a shield, applying damage of: "+ this.bulletDamage);
@@ -241,7 +244,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
         }
 
         if (by instanceof PowerUp) {
-           ((PowerUp) by).apply(this);
+            ((PowerUp) by).apply(this);
         }
     }
 
