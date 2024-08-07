@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -34,6 +33,7 @@ public class GameWorld extends JPanel implements Runnable {
 
     private final Rectangle futureBounds = new Rectangle();
     private static SoundManager soundManager;
+    private String winner;
 
     static double scaleFactor = .2;
 
@@ -47,55 +47,73 @@ public class GameWorld extends JPanel implements Runnable {
         return soundManager;
     }
 
+    private GameState gameState = GameState.PAUSED;
+
+    public void setGameState(GameState newState) {
+        this.gameState = newState;
+    }
+
     // State related.
     @Override
     public void run() {
-        this.resetGame();
+        setGameState(GameState.RUNNING);
+
+
         soundManager.playBackgroundMusic("bgm");
 
         try {
-            while (true) {
-                this.tick++;
+            while (gameState == GameState.RUNNING) {
+                    this.tick++;
 
-                for (int i = gObjs.size() - 1; i >= 0; i--) {
-                    if (gObjs.get(i) instanceof Updatable u) {
-                        u.update();
-                    } else {
-                        break;
+                    // Check winner.
+                    if (t1.getLife() <= 0 || t2.getLife() <= 0) {
+                        setGameState(GameState.ENDED);
+                        this.resetGame();
+                        this.lf.setFrame("end",  t1.getLife() <= 0 ? "Tank 2" : "Tank 1");
+
+                        soundManager.playBackgroundMusic("bgm");
                     }
-                }
 
-                for (Animation ani : animations) {
-                    if (ani != null) {
-                        ani.update();
+                    for (int i = gObjs.size() - 1; i >= 0; i--) {
+                        if (gObjs.get(i) instanceof Updatable u) {
+                            u.update();
+                        } else {
+                            break;
+                        }
                     }
-                }
 
-                this.checkCollisions();
+                    for (Animation ani : animations) {
+                        if (ani != null) {
+                            ani.update();
+                        }
+                    }
 
-                gObjs.removeIf(GameObject::hasCollided);
+                    this.checkCollisions();
 
-                // Spawn power-ups every few ticks
-                if (this.tick % 100 == 0 && powerUps < GameConstants.GAME_WORLD_POWERUPS_LIMIT) {
+                    gObjs.removeIf(GameObject::hasCollided);
 
-                    System.out.println("Current game objects: " + gObjs.size());
-                    // powerUps++;
-                    spawnPowerUp();
-                }
+                    if (this.tick % 100 == 0 && powerUps < GameConstants.GAME_WORLD_POWERUPS_LIMIT) {
+                        System.out.println("Current game objects: " + gObjs.size());
+                        powerUps++;
+                        spawnPowerUp();
+                    }
 
-                this.repaint();
+                    this.repaint();
 
-                Thread.sleep(1000 / 144);
+                    Thread.sleep(1000 / 144);
+
             }
         } catch (InterruptedException ignored) {
             System.out.println(ignored);
         }
     }
 
-    private void resetGame() {
+    public void resetGame() {
         this.tick = 0;
 
-        /// TODO: Make them spawn opposite sides at the middle.
+        gObjs.clear();
+        animations.clear();
+
         this.t1.setX(300);
         this.t1.setY(300);
     }

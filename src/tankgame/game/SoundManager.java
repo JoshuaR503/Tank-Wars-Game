@@ -1,7 +1,6 @@
 package tankgame.game;
 
 import tankgame.ResourceManager;
-import tankgame.game.Sound;
 
 public class SoundManager {
     private Sound currentBackgroundMusic;

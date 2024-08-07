@@ -18,8 +18,6 @@ public class BreakableWall extends GameObject implements Colliable {
     public void onCollision(GameObject by) {
 
         if (by instanceof Bullet) {
-            System.out.println("Hit walll with bullet of: " + by);
-
             ResourceManager.getSound("explosion").play();
 
             life -= ((Bullet) by).getDamage();
@@ -33,7 +31,6 @@ public class BreakableWall extends GameObject implements Colliable {
         }
 
         if (by instanceof PowerUp) {
-
             ((PowerUp) by).setUnavailable();
 
             by.markCollision();

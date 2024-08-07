@@ -12,13 +12,13 @@ public class Sound {
         this.loopCount = 0;
     }
 
-    public Sound(Clip clip, int loopCount) {
-        this.clip = clip;
-        this.loopCount = loopCount;
-        this.clip.loop(this.loopCount);
+    public void play() {
+        clip.setFramePosition(0);
+        clip.start();
     }
 
-    public void play() {
+    public void play(float volume) {
+        setVolume(volume); // Set volume to low if lowVolume is true, otherwise set to normal
         clip.setFramePosition(0);
         clip.start();
     }
@@ -34,5 +34,11 @@ public class Sound {
     public void setVolume(float level) {
         FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         volumeControl.setValue(10.0f * (float) Math.log(level));
+    }
+
+    public float getVolume() {
+        FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float dB = volumeControl.getValue();
+        return (float) Math.pow(10.0f, dB / 20.0f);
     }
 }

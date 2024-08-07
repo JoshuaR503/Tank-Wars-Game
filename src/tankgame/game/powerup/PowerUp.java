@@ -33,7 +33,7 @@ public abstract class PowerUp extends GameObject implements Updatable {
         if (this.isAvailable) {
             this.isAvailable = false;
 
-            // Check if tank doesn't already have a power-up of this kind.
+            // Check if tank doesn't already have a power-up of the same kind.
             for (PowerUp powerUp : tank.getPowerUps()) {
                 if (powerUp.getClass() == this.getClass()) {
                     System.out.println("Tank already has a power-up of this kind: " + this.getClass().getSimpleName());
@@ -46,8 +46,9 @@ public abstract class PowerUp extends GameObject implements Updatable {
 
             this.applyEffect(tank);
             tank.addPowerUp(this);
-            // System.out.println("Enabled power up: " + this.getClass().getSimpleName());
-            // System.out.println("Power up info: " + this.uniqueId + " at " + formatTime(this.activationTimeMillis));
+
+            System.out.println("Enabled power up: " + this.getClass().getSimpleName());
+            System.out.println("Power up info: " + this.uniqueId + " at " + formatTime(this.activationTimeMillis));
             System.out.println("Current tank status: " + tank);
         }
     }
@@ -57,7 +58,7 @@ public abstract class PowerUp extends GameObject implements Updatable {
             this.removeEffect(tank);
             tank.removePowerUpById(this.getId());
             System.out.println("Disabled power up: " + this.getClass().getSimpleName());
-//            System.out.println("Removed power-up: " + this.uniqueId + " at " + formatTime(System.currentTimeMillis()));
+            System.out.println("Removed power-up: " + this.uniqueId + " at " + formatTime(System.currentTimeMillis()));
         }
     }
 
@@ -82,7 +83,6 @@ public abstract class PowerUp extends GameObject implements Updatable {
             this.markCollision(); // Mark for removal
         }
     }
-
 
     // Drawing
     @Override

@@ -9,8 +9,6 @@ import tankgame.game.powerup.PowerUp;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -44,6 +42,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
     private float rotationSpeed = GameConstants.DEFAULT_TANK_ROTATION_SPEED;
     private boolean hasShield = GameConstants.DEFAULT_TANK_ACTIVE_SHIELD;
     private final List<PowerUp> powerups = new CopyOnWriteArrayList<>();
+    private boolean hasPP = false;
 
     // Constructor
     Tank(float x, float y, float vx, float vy, float angle, BufferedImage img) {
@@ -62,6 +61,10 @@ public class Tank extends GameObject implements Updatable, Colliable {
 
     public int getScreenY() {
         return (int) screenY;
+    }
+
+    public int getLife() {
+        return this.lives;
     }
 
     public List<PowerUp> getPowerUps() {
@@ -102,7 +105,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
     }
 
     public void addPowerUp(PowerUp powerUp) {
-//        System.out.println("Added power up to tank: " + powerUp.toString());
+        System.out.println("Added power up to tank: " + powerUp.toString());
         this.powerups.add(powerUp);
     }
 
@@ -115,6 +118,10 @@ public class Tank extends GameObject implements Updatable, Colliable {
     }
 
     // Toggle methods for controls
+    public void togglePP() {
+        this.hasPP = !this.hasPP;
+    }
+
     void toggleUpPressed() {
         this.UpPressed = true;
     }
@@ -225,12 +232,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
     @Override
     public void onCollision(GameObject by) {
 
-        if (by instanceof BreakableWall) {
-            // I think players should lose points if they intentionally hit a wall.
-        }
-
         if (by instanceof Bullet) {
-
             ResourceManager.getSound("explosion").play();
 
             if (!this.hasShield) {
@@ -244,7 +246,11 @@ public class Tank extends GameObject implements Updatable, Colliable {
         }
 
         if (by instanceof PowerUp) {
-            ((PowerUp) by).apply(this);
+            if (!this.hasPP) { // Do not add any power ups if Peso Pluma mode is enabled.
+                ((PowerUp) by).apply(this);
+            } else {
+                by.markCollision(); // Manually mark this object since it won't be marked automatically bc it wasn't picked up.
+            }
         }
     }
 
@@ -326,6 +332,7 @@ public class Tank extends GameObject implements Updatable, Colliable {
         }
     }
 
+    // Class helpers
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

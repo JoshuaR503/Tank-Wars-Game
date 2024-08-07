@@ -2,6 +2,7 @@ package tankgame.menus;
 
 import tankgame.Launcher;
 import tankgame.ResourceManager;
+import tankgame.game.GameWorld;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,7 +15,11 @@ public class EndGamePanel extends JPanel {
     private final BufferedImage menuBackground;
     private final Launcher lf;
 
-    public EndGamePanel(Launcher lf) {
+    public EndGamePanel(Launcher lf, String winner) {
+
+
+        System.out.println("Winner: " + winner);
+
         this.lf = lf;
         this.menuBackground = ResourceManager.getSprite("menuBackground");
         this.setBackground(Color.BLACK);
@@ -37,7 +42,8 @@ public class EndGamePanel extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(this.menuBackground, 0, 0, null);
+            Graphics2D g2 = (Graphics2D) g;
+            g2.drawImage(this.menuBackground, 0, 0, null);
+
     }
 }

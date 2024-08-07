@@ -4,7 +4,6 @@ import tankgame.game.Tank;
 
 import java.awt.image.BufferedImage;
 
-// TODO: Implement this class
 public class IncreaseDamage extends PowerUp {
     public IncreaseDamage(float x, float y, BufferedImage img) {
         super(x, y, img);

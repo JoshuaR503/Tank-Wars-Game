@@ -7,7 +7,6 @@ import java.util.Random;
 
 import tankgame.ResourceManager;
 
-// TODO: Add a collidable, and if it collides with a wall or another Power up mark it as delete it.
 public final class PowerUpFactory {
 
     private static final Map<String, PowerUpInfo> powerUpInfoMap = new HashMap<>();
@@ -23,19 +22,14 @@ public final class PowerUpFactory {
         powerUpInfoMap.put("RestoreHealth", new PowerUpInfo(RestoreHealth.class, "health"));
         powerUpInfoMap.put("Shield", new PowerUpInfo(Shield.class, "shield"));
 
-        // Is there really a need to keep track of only five keys? I do not know.
+        // Is there really a need to keep track of only six keys? I do not know.
         keys = powerUpInfoMap.keySet().toArray(new String[0]);
     }
 
     public static PowerUp newRandomInstance(float x, float y) {
 
-        // Get the power-up information using a random key.
         final PowerUpInfo powerUpInfo = powerUpInfoMap.get(keys[random.nextInt(keys.length)]);
 
-
-        System.out.println(powerUpInfo.imageName);
-
-        // Get the image for the power-up using the image name from the info.
         final BufferedImage powerUpImage = ResourceManager.getSprite(powerUpInfo.imageName);
 
         try {
