@@ -33,7 +33,7 @@ public class GameWorld extends JPanel implements Runnable {
 
     private final Rectangle futureBounds = new Rectangle();
     private static SoundManager soundManager;
-    private String winner;
+    private GameState gameState = GameState.PAUSED;
 
     static double scaleFactor = .2;
 
@@ -43,36 +43,32 @@ public class GameWorld extends JPanel implements Runnable {
         soundManager = new SoundManager();
     }
 
+    // Getters
     public static SoundManager getSoundManager() {
         return soundManager;
     }
 
-    private GameState gameState = GameState.PAUSED;
-
+    // Setters.
     public void setGameState(GameState newState) {
         this.gameState = newState;
+    }
+
+    public static void addGameObject(GameObject gameObject) {
+        gObjs.add(gameObject);
+    }
+
+    public static void createAnimation(Animation ani) {
+        animations.add(ani);
     }
 
     // State related.
     @Override
     public void run() {
-        setGameState(GameState.RUNNING);
-
-
         soundManager.playBackgroundMusic("bgm");
 
         try {
-            while (gameState == GameState.RUNNING) {
+            while (this.gameState == GameState.RUNNING) {
                     this.tick++;
-
-                    // Check winner.
-                    if (t1.getLife() <= 0 || t2.getLife() <= 0) {
-                        setGameState(GameState.ENDED);
-                        this.resetGame();
-                        this.lf.setFrame("end",  t1.getLife() <= 0 ? "Tank 2" : "Tank 1");
-
-                        soundManager.playBackgroundMusic("bgm");
-                    }
 
                     for (int i = gObjs.size() - 1; i >= 0; i--) {
                         if (gObjs.get(i) instanceof Updatable u) {
@@ -98,6 +94,14 @@ public class GameWorld extends JPanel implements Runnable {
                         spawnPowerUp();
                     }
 
+                // Check winner.
+                if (t1.getLife() <= 0 || t2.getLife() <= 0) {
+                    setGameState(GameState.ENDED);
+                    this.resetGame();
+                    soundManager.stopBackgroundMusic();
+                    this.lf.setFrame("end",  t1.getLife() <= 0 ? "2" : "1", soundManager);
+                }
+
                     this.repaint();
 
                     Thread.sleep(1000 / 144);
@@ -111,11 +115,16 @@ public class GameWorld extends JPanel implements Runnable {
     public void resetGame() {
         this.tick = 0;
 
-        gObjs.clear();
         animations.clear();
+        gObjs.clear();
 
         this.t1.setX(300);
         this.t1.setY(300);
+        this.t2.resetTank();
+
+        this.t2.setX(1100);
+        this.t2.setY(300);
+        this.t2.resetTank();
     }
 
     public void InitializeGame() {
@@ -145,6 +154,7 @@ public class GameWorld extends JPanel implements Runnable {
                     gObjs.add(GameObject.newInstance(gameItems[col], col * 32, row * 32));
                 }
 
+
                 row++;
             }
         } catch (IOException e) {
@@ -163,14 +173,6 @@ public class GameWorld extends JPanel implements Runnable {
         gObjs.add(t2);
     }
 
-    public static void addGameObject(GameObject gameObject) {
-        gObjs.add(gameObject);
-    }
-
-    // Animation related.
-    public static void createAnimation(Animation ani) {
-        animations.add(ani);
-    }
 
     // Power up related.
     private void spawnPowerUp() {
@@ -184,7 +186,6 @@ public class GameWorld extends JPanel implements Runnable {
 
         GameWorld.createAnimation(new Animation(x, y, ResourceManager.getAnimation("powerpick"), 75));
     }
-
 
     // Collision related.
     private void checkCollisions() {

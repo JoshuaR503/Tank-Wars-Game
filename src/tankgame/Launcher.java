@@ -39,7 +39,6 @@ public class Launcher {
     public Launcher(){
         this.jf = new JFrame();             // creating a new JFrame object
         this.jf.setTitle("Tank Wars Game"); // setting the title of the JFrame window.
-        // when the GUI is closed, this will also shut down the VM
         this.jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -51,14 +50,13 @@ public class Launcher {
          */
         JPanel startPanel = new StartMenuPanel(this); // create a new start panel
         this.gamePanel = new GameWorld(this); // create a new game panel
-        this.gamePanel.InitializeGame(); // initialize game, but DO NOT start game
         /*
          * end panel is used to show the end game panel.  it will contain
          * two buttons restart and exit.
          */
          // create a new end game pane;
         cl = new CardLayout(); // creating a new CardLayout Panel
-        this.mainPanel.setLayout(cl); // set the layout of the main panel to our card layout
+        this.mainPanel.setLayout(cl); // set the layout of the       main panel to our card layout
         this.mainPanel.add(startPanel, "start"); //add the start panel to the main panel
         this.mainPanel.add(gamePanel, "game");   //add the game panel to the main panel
         this.jf.add(mainPanel); // add the main panel to the JFrame
@@ -73,6 +71,10 @@ public class Launcher {
                 // set the size of the jFrame to the expected size for the start panel
                     this.jf.setSize(GameConstants.START_MENU_SCREEN_WIDTH, GameConstants.START_MENU_SCREEN_HEIGHT);
             case "game" -> {
+
+                gamePanel.setGameState(GameState.RUNNING);
+                gamePanel.InitializeGame();
+
                 // set the size of the jFrame to the expected size for the game panel
                 this.jf.setSize(GameConstants.GAME_SCREEN_WIDTH, GameConstants.GAME_SCREEN_HEIGHT);
                 //start a new thread for the game to run. This will ensure our JFrame is responsive and
@@ -84,12 +86,15 @@ public class Launcher {
         this.jf.setVisible(true); // show the JFrame
     }
 
-    public void setFrame(String type, String winner) {
+    public void setFrame(String type, String winner, SoundManager sm) {
         this.jf.setVisible(false);
 
-        this.jf.setSize(GameConstants.END_MENU_SCREEN_WIDTH, GameConstants.END_MENU_SCREEN_HEIGHT);
+        gamePanel.setGameState(GameState.ENDED);
 
-        JPanel endPanel = new EndGamePanel(this, winner);
+
+        this.jf.setSize(GameConstants.END_MENU_SCREEN_WIDTH * 2, GameConstants.END_MENU_SCREEN_HEIGHT * 2);
+
+        JPanel endPanel = new EndGamePanel(this, winner, sm);
 
         this.mainPanel.add(endPanel, "end");    // add the end game panel to the main panel
 

@@ -77,7 +77,9 @@ public class ResourceManager {
             ResourceManager.sounds.put("bullet_shoot", loadSound("sounds/bullet_shoot.wav"));
             ResourceManager.sounds.put("explosion", loadSound("sounds/explosion.wav"));
             ResourceManager.sounds.put("pickup", loadSound("sounds/pickup.wav"));
-            ResourceManager.sprites.put("peso_pluma", loadSprite("sounds/peso_pluma.wav"));
+
+            ResourceManager.sounds.put("ladygaga", loadSound("sounds/ladygaga.wav"));
+            ResourceManager.sounds.put("hotline", loadSound("sounds/hotline.wav"));
 
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             throw new RuntimeException(e);

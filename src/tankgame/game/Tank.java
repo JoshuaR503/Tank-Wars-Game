@@ -351,5 +351,11 @@ public class Tank extends GameObject implements Updatable, Colliable {
         return sb.toString();
     }
 
-
+    public void resetTank() {
+        this.setSpeed(GameConstants.DEFAULT_TANK_RADIUS);
+        this.setBulletDamage(GameConstants.DEFAULT_TANK_BULLET_DAMAGE);
+        this.setLives(GameConstants.DEFAULT_TANK_LIVES);
+        this.setShield(GameConstants.DEFAULT_TANK_ACTIVE_SHIELD);
+        this.setCoolDown(GameConstants.DEFAULT_TANK_COOLDOWN);
+    }
 }
