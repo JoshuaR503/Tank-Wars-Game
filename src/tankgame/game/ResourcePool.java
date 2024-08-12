@@ -33,10 +33,6 @@ public class ResourcePool<G extends Poolable> {
         return this.resources.remove(this.resources.size() - 1);
     }
 
-    public void addToPool(G obj) {
-        this.resources.add(obj);
-    }
-
     private void refillPool() {
         this.fillPool(INIT_CAPACITY);
     }
@@ -56,8 +52,4 @@ public class ResourcePool<G extends Poolable> {
 
         return this;
     }
-
-
 }
-
-

@@ -6,15 +6,13 @@ public class SoundManager {
     private Sound currentBackgroundMusic;
 
     public void playBackgroundMusic(String soundKey) {
-        if (currentBackgroundMusic != null) {
-            currentBackgroundMusic.stop();
-        }
+
+        this.stopBackgroundMusic();
 
         currentBackgroundMusic = ResourceManager.getSound(soundKey);
+
         if (currentBackgroundMusic != null) {
             currentBackgroundMusic.loopContinuously();
-        } else {
-            System.out.println("Sound key not found: " + soundKey);
         }
     }
 

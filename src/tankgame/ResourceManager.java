@@ -5,7 +5,9 @@ import tankgame.game.Sound;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class ResourceManager {
@@ -55,11 +57,9 @@ public class ResourceManager {
 
     // Sound
     private static Sound loadSound(String path) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-        AudioInputStream ais = AudioSystem.getAudioInputStream(
-                Objects.requireNonNull(
-                        ResourceManager.class.getClassLoader().getResourceAsStream(path)
-                )
-        );
+        InputStream is = Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream(path));
+        BufferedInputStream bis = new BufferedInputStream(is); // https://stackoverflow.com/questions/5529754/java-io-ioexception-mark-reset-not-supported
+        AudioInputStream ais = AudioSystem.getAudioInputStream(bis);
 
         Clip c = AudioSystem.getClip();
         c.open(ais);

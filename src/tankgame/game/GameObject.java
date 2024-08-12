@@ -24,15 +24,6 @@ public abstract class GameObject {
         hitbox = new Rectangle((int) x, (int) y, img.getWidth(), img.getHeight());
     }
 
-    // Getters
-
-
-    // Setters
-
-    public static void setGameWorld(GameWorld gameWorld) {
-        GameObject.gameWorld = gameWorld;
-    }
-
     /**
      * Create new game object based on a type
      * @param type type of the game object
@@ -51,10 +42,7 @@ public abstract class GameObject {
         };
     }
 
-    public void draw(Graphics g) {
-        g.drawImage(img, (int) x, (int) y, null);
-    }
-
+    // Getters
     public Rectangle getHitbox() {
         return hitbox.getBounds();
     }
@@ -65,5 +53,14 @@ public abstract class GameObject {
 
     public void markCollision() {
         this.hasCollided = true;
+    }
+
+    // Setters
+    public static void setGameWorld(GameWorld gameWorld) {
+        GameObject.gameWorld = gameWorld;
+    }
+
+    public void draw(Graphics g) {
+        g.drawImage(img, (int) x, (int) y, null);
     }
 }

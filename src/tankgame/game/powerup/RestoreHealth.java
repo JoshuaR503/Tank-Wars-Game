@@ -16,6 +16,5 @@ public class RestoreHealth extends PowerUp {
 
     @Override
     public void removeEffect(Tank tank) {
-        tank.setShield(false);
     }
 }

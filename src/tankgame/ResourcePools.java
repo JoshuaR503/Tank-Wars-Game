@@ -17,8 +17,4 @@ public class ResourcePools {
     public static Poolable getPooledInstance(String key) {
         return ResourcePools.pools.get(key).removeFromPool();
     }
-
-//    public static void returnPooledInstance(String key, Poolable pool) {
-//        return ResourcePools.pools.get(key).addToPool(pool);
-//    }
 }

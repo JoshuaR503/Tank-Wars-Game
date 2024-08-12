@@ -1,18 +1,18 @@
 package tankgame.game;
 
+import tankgame.GameConstants;
+import tankgame.ResourceManager;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import tankgame.GameConstants;
-import tankgame.ResourceManager;
 
 /**
  * Bullet class representing a projectile in the game.
  * Implements Poolable, Updatable, and Colliable interfaces.
- * Author: Joshua Garcia
+ * Author: anthony-pc
  */
 public class Bullet extends GameObject implements Poolable, Updatable, Colliable {
-
     private float vx;
     private float vy;
     private float angle;
@@ -44,11 +44,6 @@ public class Bullet extends GameObject implements Poolable, Updatable, Colliable
     // Getters
     public int getDamage() {
         return damage;
-    }
-
-    // Setters
-    public void setDamage(int damage) {
-        this.damage = damage;
     }
 
     // Behavior

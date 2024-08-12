@@ -34,14 +34,6 @@ public class Animation {
     }
 
     // Getters
-    public int getFrameWidth() {
-        return frames.get(middleIndex).getWidth();
-    }
-
-    public int getFrameHeight() {
-        return frames.get(middleIndex).getHeight();
-    }
-
     public boolean isComplete() {
         return !isRunning;
     }
