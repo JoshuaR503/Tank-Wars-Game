@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 /**
  *
- * @author anthony-pc
+ * @author Joshua Garcia
  */
 public class  TankControl implements KeyListener {
     private final Tank t1;

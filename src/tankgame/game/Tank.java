@@ -1,22 +1,21 @@
 package tankgame.game;
 
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import tankgame.GameConstants;
 import tankgame.ResourceManager;
 import tankgame.ResourcePools;
 import tankgame.game.powerup.PesoPluma;
 import tankgame.game.powerup.PowerUp;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 /**
  * Tank class representing the player's tank in the game.
  * Implements Updatable and Colliable interfaces.
  *
- * Author: anthony-pc
+ * Author: Joshua Garcia
  */
 public class Tank extends GameObject implements Updatable, Colliable {
 
