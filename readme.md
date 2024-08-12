@@ -80,13 +80,3 @@ To build the game using IntelliJ:
 ## Program Entry Point
 
 - **Launcher**: Initializes and manages the main user interface, including start menu, game panel, end menu, and transitions.
-
-## Self-Reflection on Development Process
-
-Working on this project was amazing. Building something meaningful with Java was a new experience for me. I learned a lot, especially about polymorphism and interfaces. Debugging and managing the game's state were challenging but fun. I also became more familiar with IntelliJ and even made my first JAR file.
-
-The process of figuring out power-ups was interesting, though I encountered some issues with power-up durations and effects. All in all, this project was a great learning experience, and I look forward to spending more time improving the game.
-
-## Project Conclusion
-
-The Tank Wars project successfully implemented a functional 2D tank game in Java, adhering to the principles of Object-Oriented Programming (OOP). The project was a valuable learning experience, particularly in the areas of polymorphism, interfaces, and game development workflows.
